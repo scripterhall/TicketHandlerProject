@@ -1,0 +1,17 @@
+extends baseEmail
+
+block content 
+    p Bonjour #{firstName},
+        p Bienvenue sur ProjetX, votre solution de gestion de tickets de projet 🎉🙏
+        p Pour optimiser votre expérience, nous vous recommandons de mettre à jour votre profil et d'ajouter une photo utilisateur !
+        table.btn.btn-primary(role='presentation', border='0', cellpadding='0', cellspacing='0')
+            tbody
+                tr
+                    td(align='left')
+                        table(role='presentation', border='0', cellpadding='0', cellspacing='0')
+                            tbody
+                                tr
+                                    td
+                                        a(href=`${url}`, target='_blank') Mettre à jour mon profil
+        p Si vous avez des questions ou besoin d'aide pour gérer vos tickets, n'hésitez pas à nous contacter !
+        p - L'équipe ProjetX

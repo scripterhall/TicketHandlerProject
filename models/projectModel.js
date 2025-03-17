@@ -7,7 +7,8 @@ const ProjectSchema = new mongoose.Schema({
     members: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Member' }],
     createdAt: { type: Date, default: Date.now },
     startAt: { type: Date, required: true },
-    endAt: { type: Date, required: true }
+    endAt: { type: Date, required: true },
+    active: { type: Boolean, default: true }
 },
 {
     toJSON: { virtuals: true },

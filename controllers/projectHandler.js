@@ -6,7 +6,7 @@ const factory = require('./handlerFactory');
 // GET all projects
 exports.getAllProjects = factory.getAll(Project);
 // GET a single project
-exports.getProject = factory.getOne(Project,{path:'tickets'});
+exports.getProject = factory.getOne(Project);//then ,{path:'tickets'}
 // Create a project
 exports.createProject = factory.createOne(Project);
 // Update a project
@@ -53,6 +53,12 @@ exports.aliasBiggestDurationProjects = (req, res, next) => {
     req.query.limit = '5';
     req.query.sort = 'duration';
     req.query.fields = 'name,duration,startAt,endAt';
+    next();
+}
+
+//give the project before his creation to current member req.member.id
+exports.setProjectChef = (req, res, next) => {
+    req.body.chef = req.member.id;
     next();
 }
 

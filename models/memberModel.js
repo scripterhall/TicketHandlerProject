@@ -21,12 +21,12 @@ const memberSchema = new mongoose.Schema({
     },
     role: {
         type: String,
-        enum: ['member', 'chef', 'admin'],
+        enum: ['member', 'chef-projet', 'admin'],
         default: 'user'
     },
     avatar: {
         type: String,
-        default: 'default.jpg'
+        default: 'default.png'
     },
     createdAt: {
         type: Date,
@@ -104,7 +104,11 @@ memberSchema.methods.generatePasswordResetToken = function() {
     const resetToken = crypto.randomBytes(20).toString('hex');
 
     // Hash the token with a timestamp for expiration
-    this.passwordResetToken = crypto.createHash('sha256').update(resetToken).digest('hex');
+    this.passwordResetToken = crypto.randomBytes(32).toString('hex');
+    this.passwordResetToken = crypto
+        .createHash('sha256')
+        .update(resetToken)
+        .digest('hex');
 
     // Set the expiration time for the token
     this.passwordResetExpires = Date.now() + 10 * 60 * 1000; // 10 minutes

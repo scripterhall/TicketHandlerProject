@@ -25,7 +25,7 @@ exports.uploadAvatar = upload.single('avatar');
 exports.resizeAvatar = catchAsync(async (req, res, next) => {
     if (!req.file) return next();
 
-    req.file.filename = `member-${req.user.id}-${Date.now()}.jpeg`;
+    req.file.filename = `member-${req.member.id}-${Date.now()}.jpeg`;
 
     await sharp(req.file.buffer)
         .resize(500, 500)
@@ -38,7 +38,7 @@ exports.resizeAvatar = catchAsync(async (req, res, next) => {
 
 //consultation de profile
 exports.getMe = (req, res, next) => {
-    req.params.id = req.user.id;
+    req.params.id = req.member.id;
     next();
 };
 
@@ -76,7 +76,7 @@ exports.updateMe = catchAsync(async (req, res, next) => {
     const filteredBody = filterObj(req.body, 'name', 'email');
     if (req.file) filteredBody.avatar = req.file.filename;
 
-    const updatedMember = await Member.findByIdAndUpdate(req.user.id, filteredBody, {
+    const updatedMember = await Member.findByIdAndUpdate(req.member.id, filteredBody, {
         new: true,
         runValidators: true
     });
@@ -91,7 +91,7 @@ exports.updateMe = catchAsync(async (req, res, next) => {
 
 //suppression de profile de membre
 exports.deleteMe = catchAsync(async (req, res, next) => {
-    await Member.findByIdAndUpdate(req.user.id, { active: false });
+    await Member.findByIdAndUpdate(req.member.id, { active: false });
      res.status(204).json({
         status:'success',
         data: null

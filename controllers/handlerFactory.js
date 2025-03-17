@@ -59,7 +59,14 @@ exports.getAll = Model => catchAsync(async (req, res, next) => {
     //allow nested GET requests par examples /projects/:id/tickets
     if(req.params.projectId) filter = { project: req.params.projectId };
     //allow nested GET requests par examples /projects/:id/tickets
-    if(req.user && req.originalUrl.includes('/projects')) filter = {chef: req.user.id};
+    if (req.member && req.originalUrl.includes('/projects')) {
+        filter = {
+            $or: [
+                { chef: req.member.id }, // Si le membre est le chef du projet
+                { members: req.member.id } // Si le membre fait partie de la liste des membres
+            ]
+        };
+    }
     const features = new APIFeatures(Model.find(filter), req.query)
         .filter()
         .sort()
