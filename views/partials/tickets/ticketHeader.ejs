@@ -1,0 +1,174 @@
+<h3><%= oneProject.name %></h3>
+<i class="small mb-2" style="margin-top:-3px">ici vous gérer vos tickets de projet dans tableau nommé Scrum Board</i>
+<div class="d-flex mb-3" style="margin-left: -10px;">
+    <div class="p-2 d-flex ">
+        <div class="p-2 flex-grow-1">
+            <form id="filterMemberForm">
+            <div  class="input-group mb-3">
+                <select name="member" class="form-select" id="inputGroupSelect02">
+                  <option selected>Choose...</option>
+                  <% oneProject.members.forEach((member, index) => { %>
+                    <option value="<%= member.id %>"><%=member.name %></option>  
+                  <% }) %>
+                </select>
+                <button type="submit" class="btn btn-light input-group-text" for="inputGroupSelect02">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+              </div>
+            </form>
+        </div>
+        <div class="p-2">
+            <% oneProject.members.forEach((member, index) => { %>
+                <% if(index<3) { %>
+                   <img src="/img/members/<%= member.avatar %>" alt="logo member" width="40" height="40" style="margin-right:-15px" class="img-fluid rounded-circle"> 
+                <% } %>  
+            <% }) %>
+        </div>
+    </div>
+    <div class="p-3 d-flex justify-content-between">
+        <!-- deux select une pour chercher par titre de ticker et l'autre pour chercher par date de creation -->
+        <form id="titreFilterForm" class="me-3">
+        <div class="input-group mb-3 me-4">
+            <input type="text" class="form-control" id="titre-filter" name="title" placeholder="Rechercher par titre" aria-label="Rechercher par titre" aria-describedby="basic-addon2">
+            <button type="submit" class="btn btn-light input-group-text" id="basic-addon2">
+              <i class="fa-solid fa-search"></i>
+            </button>
+        </div>
+    </form>
+        <form id="dateFilterForm">
+        <div class="input-group mb-3">
+           
+            <input type="date"  name="createdAt" class="form-control" placeholder="Rechercher par date de création" aria-label="Rechercher par date de création" aria-describedby="basic-addon2">
+            <button type="submit" class="btn btn-light input-group-text" id="basic-addon2">
+              <i class="fa-solid fa-calendar-alt"></i>
+            </button>
+            
+        </div>
+        </form>
+    </div>
+    <div class="ms-auto p-2">
+        <div class="d-flex justify-content-between">
+            <!-- Ajouter un nouveau ticket -->
+            <% if (member.role === 'chef-projet' || member.role === 'member') { %>
+                <button class="btn btn-secondary me-3" data-bs-toggle="modal" data-bs-target="#addNormalTicketModal">
+                    <i class="fa-solid fa-ticket-simple me-2"></i>ticket normal 
+                </button>
+            <% } %>
+            <!-- Exporter les tickets au format CSV -->
+            <% if (member.role === 'chef-projet' || member.role === 'member') { %>
+            <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#addComposedTicketModal">
+                <i class="fa-solid fa-clipboard-list me-2"></i>ticket compose
+            </button>
+            <% } %>
+        </div>
+    </div>
+</div>
+
+<!-- modal d'ajout de normal ticket-->
+<div class="modal fade" id="addNormalTicketModal" tabindex="-1" aria-labelledby="addNormalTicketModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <form id="normal-ticket-form" method="post">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Ajouter une Ticket Simple</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+      
+        <div class="modal-body">
+          <!-- formulaire d'ajout de ticket normal -->
+         
+            <div class="form-group">
+              <label for="title">Titre</label>
+              <input type="text" class="form-control" id="title" name="title" required>
+            </div>
+            <div class="form-group">
+              <label for="description">Description</label>
+              <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
+            </div>
+            <br>
+            <div class="form-group">
+              <label for="priority">Priorité</label>
+              <select class="form-control" id="priority" name="priority">
+                <option value="low">Basse</option>
+                <option value="medium" selected>Moyenne</option>
+                <option value="high">Haute</option>
+              </select>
+            </div>
+            <br>
+            <div class="form-group">
+              <label for="dueDate">Date Limite</label>
+              <input type="date" class="form-control" id="dueDate" name="dueDate" required>
+            </div>
+            <div class="form-group">
+                <label for="assignee">Assigné à</label>
+                <select class="form-select" id="assignee" name="assignee" required>
+                  <option value="" disabled>choix du porteur</option>
+                  <!-- Options des membres à assigner -->
+                  <% oneProject.members.forEach(member => { %>
+                    <option class="d-flex" value="<%= member.id %>">
+                        <img src="/img/members/<%= member.avatar %>" alt="logo member" width="30" height="30" class="img-fluid rounded-circle me-2" />
+                        <%= member.name %>
+                    </option>
+                  <% }) %>
+                </select>
+              </div>
+            <input type="hidden" id="project" value="<%= oneProject.id %>" />
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Creer nouveau</button>
+        </div>
+    </form>
+      </div>
+    
+    </div>
+  </div>
+<!-- end of modal -->
+
+<!-- modal d'ajout de ticket compose-->
+<div class="modal fade" id="addComposedTicketModal" tabindex="-1" aria-labelledby="addComposedTicketModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <form id="composed-ticket-form" method="post">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body modal-body-composed">
+          <!-- formulaire d'ajout de ticket compose -->
+          <div class="form-group">
+            <label for="title">Titre</label>
+            <input type="text" class="form-control" id="title-composed" name="title" required>
+          </div>
+          <div class="form-group">
+            <label for="description">Description</label>
+            <textarea class="form-control" id="description-composed" name="description" rows="3" required></textarea>
+          </div>
+          <div class="form-group">
+            <label for="assignee">Assigné à</label>
+            <select class="form-select" id="assignee" name="assignee" required>
+              <!-- Options des membres à assigner -->
+              <% oneProject.members.forEach(member => { %>
+                <option value="<%= member.id %>"><%= member.name %></option>
+              <% }) %>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Sous-tickets</label>
+            <div id="subTicketsContainer"></div>
+            <button type="button" class="btn btn-secondary mt-2" id="addSubTicket">Ajouter un sous-ticket</button>
+          </div>
+          <input type="hidden" id="project" name="project" value="<%= oneProject.id %>" />
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Créer</button>
+        </div>
+    </form>
+      </div>
+    </div>
+  </div>
+
+<!-- end of modal -->
+
+

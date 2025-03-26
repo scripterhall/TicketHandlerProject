@@ -1,0 +1,19 @@
+<table class="table align-middle mb-0 bg-white">
+    <thead class="bg-light">
+      <tr>
+        <th>Assignee à</th>
+        <th>titre</th>
+        <th>status</th>
+        <th>sous ticket</th>
+        <th>priorite</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% tickets.forEach((ticket,index) => { %>
+         <%- include('./oneComposedTicket.ejs',{oneComposedTicket:ticket}) %>
+      <%})%>
+    </tbody>
+</table>
+<div data-tickets="<%= JSON.stringify(tickets) %>" id="composed-tickets" ></div>
+

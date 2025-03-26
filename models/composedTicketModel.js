@@ -38,6 +38,23 @@ composedTicketSchema.virtual('priority').get(function () {
     );
 });
 
+// recuperer les sous-tickets dans les requetes find
+composedTicketSchema.pre(/^find/, function (next) {
+    this.populate({
+        path:'subTickets',
+        select: '-__v -project -createdAt -updatedAt -active'
+    });
+    next();
+});
+
+
+
+
+
+
+
+
+
 //composedTicketSchema est une sous-classe de Ticket
 const ComposedTicket = Ticket.discriminator('composedTicket', composedTicketSchema);
 module.exports = ComposedTicket;

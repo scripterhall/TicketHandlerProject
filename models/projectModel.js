@@ -25,12 +25,19 @@ ProjectSchema.virtual('duration').get(function () {
     return Math.ceil(durationInMs / (1000 * 60 * 60 * 24)); // Convertir en jours
 });
 
-//des methodes virtual pour la recuperation des tickets
+//des methodes virtual pour la recuperation des 10 premier tickets 
 
 ProjectSchema.virtual('tickets', {
     ref: 'Ticket',
     localField: '_id',
-    foreignField: 'project'
+    foreignField: 'project',
+    as: 'tickets',
+    options: {
+        sort: { createdAt: -1 }, // Tri par priorité décroissante
+        where: { active: true }
+    }
+    ,
+    limit: 10 // Garde uniquement les 10 premiers tickets
 });
 
 ProjectSchema.pre(/^find/,function(next){

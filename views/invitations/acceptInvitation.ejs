@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accept Invitation</title>
+</head>
+<body>
+    <h1 class="result-message">Accept Invitation</h1>
+    <p> <%= invitation.messageInvitation %></p>
+    <input type="hidden" value="<%= invitation.id %>" id="idInvitation" />
+    <p>Do you want to accept this invitation?</p>
+    <button  id="accept-button">Accept</button>
+    <br>
+    <a href="/login">Cancel</a>
+    <script src="/js/bundle.js"></script>
+</body>
+</html>

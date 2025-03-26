@@ -1,0 +1,115 @@
+<div class="container " id="scrumBoardContainer">
+    <div class="row">
+        <!-- Bloc TO DO -->
+        <div class="col-md-4 mb-4">
+            <div class="card bg-light shadow p-2">
+                <div class="card-header border-bottom-0  text-secondary">
+                    A Faire
+                </div>
+                <div id="Todo" class="card-body">
+                    <% tickets.filter(ticket => ticket.state === 'Todo' && ticket.type === 'normalTicket' ).forEach(ticket => { %>
+                        <div data-ticketid="<%= ticket.id %>" class="card mb-1 ">
+                            <div class="card-body">
+                                <h6 class="card-title"><%= ticket.title %></h6>
+                                <span class="badge bg-primary"><%= new Date(ticket.createdAt).toLocaleDateString() %></span>
+                                <p class="card-text mt-2 small"><%= ticket.description.length > 60 ? ticket.description.substring(0, 60) + '…' : ticket.description  %></p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="badge bg-info"><%= ticket.assignee.name %></span>
+                                    <div class="dropdown">
+                                        <img class="dropdown-toggle rouded-circle" src="/img/members/<%= ticket.assignee.avatar %>" width="35" height="35" data-bs-toggle="dropdown" aria-expanded="false" />
+                                        <ul  class="dropdown-menu">
+                                            <% oneProject.members.forEach(member => { %>
+                                              <li><button  data-ticket="<%= ticket.id %>" data-assignee="<%= member.id %>" class="dropdown-item changeAssigneeToDo d-flex justify-content-start" type="button">
+                                                <img src="/img/members/<%= member.avatar %>" class="rounded-circle me-2" width="35" height="35" />
+                                                <%= member.name.split(' ')[0] %>
+                                              </button></li>
+                                            <% }) %>
+                                        </ul>
+                                      </div>
+                                </div>
+                            </div>
+                        </div>
+                    <% }) %>
+                </div>
+            </div>
+        </div>
+        <!-- Bloc IN PROGRESS -->
+        <div class="col-md-4 mb-4">
+            <div class="card bg-light  shadow p-2">
+                <div class="card-header border-bottom-0 text-secondary">
+                    En Cours
+                </div>
+                <div id="Doing" class="card-body">
+                    <% tickets.filter(ticket => ticket.state === 'Doing').forEach(ticket => { %>
+                        <div data-ticketid="<%= ticket.id %>" class="card mb-1">
+                            <div class="card-body">
+                                <h6 class="card-title"><%= ticket.title %></h6>
+                                <span class="badge bg-primary"><%= new Date(ticket.createdAt).toLocaleDateString() %></span>
+                                <p class="card-text mt-2 small"><%= ticket.description.length > 60 ? ticket.description.substring(0, 60) + '…' : ticket.description  %></p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="badge bg-info"><%= ticket.assignee.name %></span>
+                                    <!-- avatar de member sous forme de dropdown -->
+                                    <div class="dropdown">
+                                        <img class="dropdown-toggle rouded-circle" src="/img/members/<%= ticket.assignee.avatar %>" width="35" height="35" data-bs-toggle="dropdown" aria-expanded="false" />
+                                        <ul class="dropdown-menu">
+                                            <% oneProject.members.forEach(member => { %>
+                                              <li><button  data-ticket="<%= ticket.id %>" data-assignee="<%= member.id %>" class="dropdown-item changeAssigneeDoing d-flex justify-content-start" type="button">
+                                                <img src="/img/members/<%= member.avatar %>" class="rounded-circle me-2" width="35" height="35" />
+                                                <%= member.name.split(' ')[0] %>
+                                              </button></li>
+                                            <% }) %>
+                                        </ul>
+                                      </div>
+                                </div>
+                            </div>
+                        </div>
+                    <% }) %>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bloc DONE -->
+        <div class="col-md-4 mb-4">
+            <div class="card bg-light shadow p-2">
+                <div class="card-header border-bottom-0 text-secondary">
+                    Terminé
+                </div>
+                <div id="Done" class="card-body">
+                    <% tickets.filter(ticket => ticket.state === 'Done').forEach(ticket => { %>
+                        <div data-ticketid="<%= ticket.id %>" class="card mb-1 border-1 border-success">
+                            <div class="card-body">
+                                <div class="d-flex">
+                                <h6 class="card-title w-100"><%= ticket.title %> <% if(ticket.type !== 'normalTicket'){%> <span class="badge rouded-pill bg-warning text-light">composé </span> <%}%></h6>
+                                <i class="flex-shrink-1 fa-solid fa-check text-success"></i>
+                                </div>
+                                <span class="badge bg-primary"><%= new Date(ticket.createdAt).toLocaleDateString() %></span>
+                                <p class="card-text mt-2 small"><%= ticket.description.length > 60 ? ticket.description.substring(0, 60) + '…' : ticket.description  %></p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="badge bg-info"><%= ticket.assignee.name %></span>
+                                    <div class="dropdown">
+                                        <img class="dropdown-toggle rouded-circle" src="/img/members/<%= ticket.assignee.avatar %>" width="35" height="35" data-bs-toggle="dropdown" aria-expanded="false" />
+                                        <% if(ticket.state !== 'Done') { %>
+                                        <ul class="dropdown-menu">
+                                            <% oneProject.members.forEach(member => { %>
+                                              <li><button class="dropdown-item d-flex " type="button">
+                                                <img src="/img/members/<%= member.avatar %>" class="rounded-circle me-2" width="35" height="35" />
+                                                <%= member.name.split(' ')[0] %>
+                                              </button></li>
+                                            <% }) %>
+                                        </ul>
+                                        <%}%>
+                                      </div>
+                                </div>
+                            </div>
+                        </div>
+                    <% }) %>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+
+<script>
+    
+</script>

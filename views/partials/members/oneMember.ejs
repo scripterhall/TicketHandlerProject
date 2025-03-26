@@ -1,0 +1,52 @@
+<div class="card me-5 h-25" style="width: 15rem;">
+    <img src="/img/members/<%= member.avatar %>" class="card-img-top w-100" alt="...">
+    <div class="card-body">
+      <h5 class="card-title"><%= member.name %></h5>
+      <p class="card-text"></p>
+      <button data-bs-toggle="modal" data-bs-target="#profileMemberModal<%= member.id %>" class="btn btn-primary ms-4">show profile</button>
+    </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="profileMemberModal<%= member.id %>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel"><%= member.name.split(' ')[0] %></h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="d-flex">
+                <div class="flex-shrink-0">
+                  <img src="/img/members/<%= member.avatar %>"
+                    alt="Generic placeholder image" class="img-fluid" style="width: 180px; border-radius: 10px;">
+                </div>
+                <div class="flex-grow-1 ms-3">
+                  <h5 class="mb-1"><%= member.name %></h5>
+                  <p class="mb-2 pb-1"><%= member.email %></p>
+                  <div class="d-flex justify-content-start rounded-3 p-2 mb-2 bg-body-tertiary">
+                    <div>
+                      <p class="small text-muted mb-1">projets</p>
+                      <p class="mb-0">7</p>
+                    </div>
+                    <div class="px-3">
+                      <p class="small text-muted mb-1">tickets</p>
+                      <p class="mb-0">26</p>
+                    </div>
+                    <div>
+                      <p class="small text-muted mb-1">Rating</p>
+                      <p class="mb-0">8.5</p>
+                    </div>
+                  </div>
+                  <div class="d-flex pt-1">
+                    <p class="badge bg-light text-secondary ">Bienvenue dans mon profile</p>
+                  </div>
+                </div>
+                </div>
+               
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+</div>

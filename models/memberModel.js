@@ -19,6 +19,12 @@ const memberSchema = new mongoose.Schema({
         lowercase:true,
         validate: [validator.isEmail, 'Please provide a valid email']
     },
+    addresse:String,
+    phone: {
+        type:String,
+        required: [true, 'vous devez avoir un numéro de téléphone valide'],
+        minlength:[8,'Le numéro de téléphone doit contenir au moins 8 chiffres'],
+    },
     role: {
         type: String,
         enum: ['member', 'chef-projet', 'admin'],

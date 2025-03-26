@@ -1,0 +1,150 @@
+<tr>
+    <td>
+      <div class="d-flex align-items-center">
+        <img
+            src="/img/members/<%= oneComposedTicket.assignee.avatar %>"
+            alt=""
+            style="width: 45px; height: 45px"
+            class="rounded-circle"
+            />
+        <div class="ms-3">
+          <p class="fw-bold mb-1"><%= oneComposedTicket.assignee.name %></p>
+          <p class="text-muted mb-0"><%= oneComposedTicket.assignee.email %></p>
+        </div>
+      </div>
+    </td>
+    <td>
+      <p class="fw-normal mb-1"><%= oneComposedTicket.title %></p>
+    </td>
+    <td>
+        <span class="badge shadow  text-light  rounded-pill d-inline
+            <%= (oneComposedTicket.state =='Done') ? 'bg-success '  : '' %>
+            <%= (oneComposedTicket.state =='Todo') ? 'bg-warning'  : '' %>
+            <%= (oneComposedTicket.state =='Doing') ? 'bg-danger'  : '' %>
+        "><%= oneComposedTicket.state %></span>
+      </td>
+    <td>
+        <div class="d-flex justify-content-start">
+            <% oneComposedTicket.subTickets.forEach((tick,index) => { %>
+                <%- include('./oneSubTicket.ejs',{subTicket:tick}) %>
+            <% }) %>
+        </div>
+    </td>
+    <td>
+        <span class="badge shadow text-light  rounded-pill d-inline
+            <%= (oneComposedTicket.priority =='low') ? 'bg-success '  : '' %>
+            <%= (oneComposedTicket.priority =='medium') ? 'bg-info'  : '' %>
+            <%= (oneComposedTicket.priority =='high') ? 'bg-danger'  : '' %>
+        "><%= oneComposedTicket.priority %></span>
+      </td>
+    <td >
+      <button type="button" data-bs-toggle="modal" data-bs-target="#voireModal<%= oneComposedTicket.id %>" class="btn btn-link btn-sm me-1 btn-rounded">
+        voire
+      </button>
+      <button type="button" data-bs-toggle="modal" data-bs-target="#editModal<%= oneComposedTicket.id %>" class="btn btn-link btn-sm me-1 btn-rounded">
+        modifier
+      </button>
+      <button type="button" data-bs-toggle="modal" data-bs-target="#deleteModal<%= oneComposedTicket.id %>" class="btn btn-link btn-sm me-1 btn-rounded">
+        supprimer
+      </button>
+    </td>
+  </tr>
+
+  <!-- edit Modal -->
+<div class="modal fade" id="editModal<%= oneComposedTicket.id %>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form id="edit-composed-ticket-form<%= oneComposedTicket.id %>" method="post">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Modifier ticket <%= oneComposedTicket.title %></h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body modal-body-<%= oneComposedTicket.id %>">
+       <!-- formulaire d'ajout de ticket normal -->
+       <div class="form-group">
+        <label for="title<%= oneComposedTicket.id %>">Titre</label>
+        <input type="text" value="<%=oneComposedTicket.title %>" class="form-control" id="title<%= oneComposedTicket.id %>" name="title" required>
+      </div>
+      <div class="form-group">
+        <label for="description<%= oneComposedTicket.id %>">Description</label>
+        <textarea class="form-control" id="description<%= oneComposedTicket.id %>" name="description" rows="3" required><%=oneComposedTicket.description %></textarea>
+      </div>
+      <% if(oneComposedTicket.state !== 'Done') { %>
+      <br>
+      <div class="form-group">
+        <label for="state<%= oneComposedTicket.id %>">etat</label>
+        <select class="form-select" id="state<%= oneComposedTicket.id %>" name="state">
+          <option <%= (oneComposedTicket.state == 'Todo')? 'selected':'' %> value="Todo">Todo</option>
+          <option <%= (oneComposedTicket.state == 'Doing')? 'selected':'' %> value="Doing" >Doing</option>
+          <option <%= (oneComposedTicket.state == 'Done')? 'selected':'' %> value="Done">Done</option>
+        </select>
+      </div>
+      <%}%>
+      <br>
+      <div class="form-group">
+          <label for="assignee">Assigné à</label>
+          <select class="form-select" id="assignee<%= oneComposedTicket.id %>" name="assignee" required>
+            <option value="" disabled>choix du porteur</option>
+            <!-- Options des membres à assigner -->
+            <% oneProject.members.forEach(member => { %>
+              <option class="d-flex" value="<%= member.id %>" <%= (oneComposedTicket.assignee.id == member.id) ?'selected':'' %>>
+                  <img src="/img/members/<%= member.avatar %>" alt="logo member" width="30" height="30" class="img-fluid rounded-circle me-2" />
+                  <%= member.name %>
+              </option>
+            <% }) %>
+          </select>
+        </div>
+      <input type="hidden" id="project<%= oneComposedTicket.id %>" value="<%= oneProject.id %>" />
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+    <button type="submit"  class="btn btn-primary">Modifier Ticket</button>
+  </div>
+</form>
+    </div>
+  </div>
+</div>
+
+<!-- delete Modal -->
+<div class="modal fade" id="deleteModal<%= oneComposedTicket.id %>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Supprimer ticket <%= oneComposedTicket.title %></h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body modal-supprimer-body-<%= oneComposedTicket.id %>">
+        
+        <p class="fs-4 fw-medium title" >Vous êtes sûr de suprimer le ticket <span class="badge shadow p-1 bg-primary text-white"> <%= oneComposedTicket.title%></span> </p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" id="deleteComposedTicketButton<%=oneComposedTicket.id %>" class="btn btn-danger">Supprimer</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- voire Modal -->
+  <div class="modal fade" id="voireModal<%= oneComposedTicket.id %>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Voir ticket <%= oneComposedTicket.title %></h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+  
+          </div>
+        <div class="modal-body modal-body-<%= oneComposedTicket.id %>">
+          <p class="fs-6 fw-medium title" >Titre : <%= oneComposedTicket.title %></p>
+          <p class="fs-6 fw-normal description" >Description : <%= oneComposedTicket.description %></p>
+          <p class="fs-6  state" >Etat : <%= oneComposedTicket.state %></p>
+          <p class="fs-6  priority" >Priorité : <%= oneComposedTicket.priority %></p>
+          <p class="fs-6  assignee" >Assigné à : <%= oneComposedTicket.assignee.name %></p>
+          <p class="fs-6  creationDate" >Créé le : <%= new Date(oneComposedTicket.createdAt).toLocaleDateString() %></p>
+          </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+
+      </div>
+    </div>
+  </div>

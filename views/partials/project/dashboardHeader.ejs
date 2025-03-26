@@ -1,0 +1,39 @@
+<div class="container mt-5 ms-5 ">
+    <div class="row d-flex justify-content-around ">
+        <!-- Carte pour le nombre total de tickets -->
+        <div class="card col-3 shadow p-2 border border-primary"  style="width: 18rem;">
+            <div class="card-body">
+                <h5 class="card-title">Nombre total de Tickets</h5>
+                <h6 class="card-subtitle mb-2 text-body-secondary">Total</h6>
+                <p class="card-text"><%= project.tickets.length %></p>
+            </div>
+        </div>
+
+        <!-- Carte pour le nombre de tickets en TODO -->
+        <div class="card col-3 shadow p-2  border border-primary" style="width: 18rem;">
+            <div class="card-body">
+                <h5 class="card-title">Tickets TODO</h5>
+                <h6 class="card-subtitle mb-2 text-body-secondary">À faire</h6>
+                <p class="card-text"><%= project.tickets.filter(ticket => ticket.status === 'TODO').length %></p>
+            </div>
+        </div>
+
+        <!-- Carte pour le nombre de tickets terminés -->
+        <div class="card col-3 shadow p-2  border border-primary" style="width: 18rem;">
+            <div class="card-body">
+                <h5 class="card-title">Tickets Terminés</h5>
+                <h6 class="card-subtitle mb-2 text-body-secondary">Complétés</h6>
+                <p class="card-text"><%= project.tickets.filter(ticket => ticket.status === 'DONE').length %></p>
+            </div>
+        </div>
+
+        <!-- Carte pour le nombre de membres -->
+        <div class="card col-3 shadow p-2  border border-primary" style="width: 18rem;">
+            <div class="card-body">
+                <h5 class="card-title">Nombre de Membres</h5>
+                <h6 class="card-subtitle mb-2 text-body-secondary">Membres du projet</h6>
+                <p class="card-text"><%= project.members.length %></p>
+            </div>
+        </div>
+    </div>
+</div>

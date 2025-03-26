@@ -6,7 +6,7 @@ const factory = require('./handlerFactory');
 // GET all projects
 exports.getAllProjects = factory.getAll(Project);
 // GET a single project
-exports.getProject = factory.getOne(Project);//then ,{path:'tickets'}
+exports.getProject = factory.getOne(Project,{path:'tickets',select:'-project'});
 // Create a project
 exports.createProject = factory.createOne(Project);
 // Update a project

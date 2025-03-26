@@ -1,0 +1,171 @@
+<div class="col-md-3 col-sm-6 content-card">
+    <div class="card-big-shadow">
+        <div class="card card-just-text"  data-background="color" data-color="blue" data-radius="none">
+            <div class="card-head mb-0">
+              <button data-bs-toggle="modal" data-bs-target="#deleteModal<%= normalTicket.id %>" class="btn btn-link mb-0  float-end"><i class="fa-solid fs-5 fa-close"></i></button>
+            </div>
+            <div class="content mt-0">
+                <h5 class="category mb-4 fs-6"><%= normalTicket.title %></h5>
+                <h4 class="small mb-3 badge bg-secondary rouded-pill
+                <%= (normalTicket.priority =='low') ? 'bg-light text-dark'  : '' %>
+                <%= (normalTicket.priority =='medium') ? 'bg-info'  : '' %>
+                <%= (normalTicket.priority =='high') ? 'bg-danger'  : '' %>
+                ">
+                    <%= normalTicket.priority %>
+                </h4>
+                <p class="description"><%= (normalTicket.description.length>45) ? normalTicket.description.substring(0,44)+"..." : normalTicket.description %></p>
+                <div class="d-flex ms-4 justify-content-arround">
+                  <button class="btn me-1 btn-outline-secondary text-white" data-bs-toggle="modal" data-bs-target="#exampleModal<%= normalTicket.id %>">
+                    <i class="fa-solid fs-5 fa-info-circle"></i>
+                  </button>
+                  <button class="btn me-1 btn-outline-primary text-white" data-bs-toggle="modal" data-bs-target="#editTicketModal<%= normalTicket.id %>">
+                    <i class="fa-solid fs-5 fa-edit"></i>
+                  </button>
+                  <button class="btn btn-outline-primary text-white" data-bs-toggle="modal" data-bs-target="#changeStatus<%= normalTicket.id %>">
+                    <i class="fa-solid fs-5 fa-check"></i>
+                  </button>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- show Modal -->
+<div class="modal fade" id="exampleModal<%= normalTicket.id %>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Details</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <!-- ticket details -->
+          <h5 class="modal-title">Titre : <%= normalTicket.title %></h5>
+          <p>Description : <%= normalTicket.description %></p>
+          <p>Assigné à : <%= normalTicket.priority %></p>
+          <p>Propriétaire : <%= normalTicket.assignee.name %></p>
+          <p>Date de création : <%= new Date(normalTicket.createdAt).toLocaleDateString() %></p>
+          <p>Status : <%= normalTicket.state %></p>
+          <% if(normalTicket.parentTicket){ %>
+          <p class="">sous ticket<span class="badge ms-2 rounded-pill bg-secondary" style="font-size: 14px;">
+            <i class="fa-solid fa-clipboard-list me-2"></i>
+            <%= normalTicket.parentTicket.title %></span> </p>
+          <%}%>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Save changes</button>
+        </div>
+      </div>
+    </div>
+</div>
+
+<!-- edit Modal -->
+<div class="modal fade" id="editTicketModal<%= normalTicket.id %>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form id="edit-normal-ticket-form<%= normalTicket.id %>" method="post">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Modifier ticket <%= normalTicket.title %></h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body modal-body-<%= normalTicket.id %>">
+       <!-- formulaire d'ajout de ticket normal -->
+       <div class="form-group">
+        <label for="title<%= normalTicket.id %>">Titre</label>
+        <input type="text" value="<%=normalTicket.title %>" class="form-control" id="title<%= normalTicket.id %>" name="title" required>
+      </div>
+      <div class="form-group">
+        <label for="description<%= normalTicket.id %>">Description</label>
+        <textarea class="form-control" id="description<%= normalTicket.id %>" name="description" rows="3" required><%=normalTicket.description %></textarea>
+      </div>
+      <br>
+      <div class="form-group">
+        <label for="priority<%= normalTicket.id %>">Priorité</label>
+        <select class="form-select" id="priority<%= normalTicket.id %>" name="priority">
+          <option <%= (normalTicket.priority == 'low')? 'selected':'' %> value="low">Basse</option>
+          <option <%= (normalTicket.priority == 'medium')? 'selected':'' %> value="medium" selected>Moyenne</option>
+          <option <%= (normalTicket.priority == 'high')? 'selected':'' %> value="high">Haute</option>
+        </select>
+      </div>
+      <% if(normalTicket.state !== 'Done') { %>
+      <br>
+      <div class="form-group">
+        <label for="state<%= normalTicket.id %>">etat</label>
+        <select class="form-select" id="state<%= normalTicket.id %>" name="state">
+          <option <%= (normalTicket.state == 'Todo')? 'selected':'' %> value="Todo">Todo</option>
+          <option <%= (normalTicket.state == 'Doing')? 'selected':'' %> value="Doing" >Doing</option>
+          <option <%= (normalTicket.state == 'Done')? 'selected':'' %> value="Done">Done</option>
+        </select>
+      </div>
+      <%}%>
+      <br>
+      <div class="form-group">
+        <label for="dueDate<%= normalTicket.id %>">Date Limite</label>
+        <input type="date" value="<%= new Date(normalTicket.dueDate).toLocaleDateString('en-ZA').replace('/','-').replace('/','-') %>" class="form-control" id="dueDate<%= normalTicket.id %>" name="dueDate" required>
+      </div>
+      <div class="form-group">
+          <label for="assignee">Assigné à</label>
+          <select class="form-select" id="assignee<%= normalTicket.id %>" name="assignee" required>
+            <option value="" disabled>choix du porteur</option>
+            <!-- Options des membres à assigner -->
+            <% oneProject.members.forEach(member => { %>
+              <option class="d-flex" value="<%= member.id %>" <%= (normalTicket.assignee.id == member.id) ?'selected':'' %>>
+                  <img src="/img/members/<%= member.avatar %>" alt="logo member" width="30" height="30" class="img-fluid rounded-circle me-2" />
+                  <%= member.name %>
+              </option>
+            <% }) %>
+          </select>
+        </div>
+      <input type="hidden" id="project<%= normalTicket.id %>" value="<%= oneProject.id %>" />
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+    <button type="submit"  class="btn btn-primary">Modifier Ticket</button>
+  </div>
+</form>
+    </div>
+  </div>
+</div>
+
+<!-- delete Modal -->
+<div class="modal fade" id="deleteModal<%= normalTicket.id %>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Supprimer ticket <%= normalTicket.title %></h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body modal-supprimer-body-<%= normalTicket.id %>">
+        
+        <p class="fs-4 fw-medium title" >Vous êtes sûr de suprimer le ticket <span class="badge shadow p-1 bg-primary text-white"> <%= normalTicket.title%></span> </p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" id="deleteButton<%=normalTicket.id %>" class="btn btn-danger">Supprimer</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- changeStatus Modal -->
+<!-- Modal -->
+<div class="modal fade" id="changeStatus<%= normalTicket.id %>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Terminer la ticket <%= normalTicket.title %></h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body modal-body-end-<%= normalTicket.id %>">
+        <input type="hidden" id="ticket" value="<%= normalTicket.id %>" />
+        <p class="fs-4 fw-medium">Voulez-vous vraiment terminer le ticket <span class="badge shadow p-1 bg-success text-white"> <%= normalTicket.title %></span> ?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" id="endButton<%=normalTicket.id %>" class="btn btn-primary">Terminer Ticket</button>
+      </div>
+    </div>
+  </div>
+</div>

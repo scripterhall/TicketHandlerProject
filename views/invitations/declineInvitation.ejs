@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Decline Invitation</title>
+</head>
+<body>
+    <h1 class="result-message">Decline Invitation</h1>
+    <p> <%= invitation.messageInvitation %></p>
+    <p>Do you want to decline this invitation?</p>
+    <input type="hidden" value="<%= invitation.id %>" id="idInvitation" />
+    <button id="decline-button">Decline</button>
+    <br>
+    <a href="/login">Cancel</a>
+    <script src="/js/bundle.js"></script>
+</body>
+</html>

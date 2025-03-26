@@ -1,0 +1,20 @@
+.sidebar {
+    height: 100%;
+    position: fixed;
+    width: 300px;
+    z-index: 1;
+    position: relative; /* S'assure qu'elle ne couvre pas le footer */
+    margin-left: -12px;
+}
+.spacing-letters {
+    letter-spacing: 0.2em; /* Ajustez la valeur selon vos besoins */
+}
+
+.hover{
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+.hover:hover{
+    transform: scale(1.1);
+}

@@ -19,8 +19,7 @@ const TicketSchema = new mongoose.Schema({
     },
     assignee: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Member',
-        required: [true, 'Vous devez avoir un responsable']
+        ref: 'Member'
     },
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date },
@@ -32,6 +31,30 @@ const TicketSchema = new mongoose.Schema({
     toObject: { virtuals: true }, 
     discriminatorKey: 'type', // Clé permettant la discrimination des sous-classes
     collection: 'tickets'
+});
+
+// Ajouter un index pour la recherche par priorité
+TicketSchema.index({ priority: 1 });
+
+// Ajouter un index pour la recherche par projet
+TicketSchema.index({ project: 1 });
+
+// Ajouter un index pour la recherche par état
+TicketSchema.index({ state: 1 });
+
+//recuperer l'assigne dans les requetes find
+TicketSchema.pre(/^find/, function(next) {
+    this.populate({
+        path: 'assignee',
+        select: '-__v -passwordChangedAt -passwordResetToken -passwordResetExpiresAt -password'
+    });
+    next();
+});
+
+// select only active members
+TicketSchema.pre(/^find/, function(next) {
+    this.find({ active: { $ne: false } });
+    next();
 });
 
 module.exports = mongoose.model('Ticket', TicketSchema);

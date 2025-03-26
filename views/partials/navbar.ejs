@@ -1,0 +1,316 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <!-- Partie Gauche : Liste déroulante des projets -->
+        <div class="d-flex align-items-center">
+            <form id="curProjectForm" class="me-3 ">
+                <div class="input-group  me-2">
+            <select class="form-select" name="id" id="currentProject">
+                    <% projects.forEach(project => { %>
+                        <option  value="<%= project.id %>"  <%= project.id === oneProject.id ? 'selected' : '' %>><%= project.name %></option>
+                    <% }) %>
+            </select>
+            <button type="submit" class="btn btn-primary">
+                <i class="fa-solid text-white fa-circle-check"></i>
+            </button>
+            </div>
+            </form>
+            <% if (member.role === 'chef-projet') { %>
+                <button class="btn btn-secondary" id="addProjectBtn" data-bs-toggle="modal" data-bs-target="#addProjet"><i class="fa-solid fa-plus"></i></button>
+            <% } else { %>
+                <span class="text-white">Bienvenue, <%= member.name %></span>
+            <% } %>
+        </div>
+
+        <!-- Bouton pour le menu responsive -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Partie Droite : Avatar utilisateur avec dropdown -->
+        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+            <ul class="navbar-nav">
+                <% if (member.role === 'member') { %>
+                <li class="nav-item dropdown">
+                    <a class="nav-link  d-flex align-items-center" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+                        <button type="button" class="btn btn-primary rounded-circle position-relative">
+                            <i class="fa-solid fs-3 fa-bell">
+                            </i>
+                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                              <%= invitations.length %>
+                              <span class="visually-hidden">unread messages</span>
+                            </span>
+                          </button>
+                    </a>
+                    <% } %>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notificationDropdown">
+                        <li class="dropdown-header d-flex justify-content-between">
+                            Notifications
+                            <a href="#" class="text-decoration-none">Paramètres</a>
+                        </li>
+                        <% invitations?.forEach(invitation => { %>
+                            <li class="dropdown-item">
+                                <div class="d-flex align-items-center">
+                                    <img src="/img/members/default.png" alt="Notification Icon" class="rounded-circle me-2" width="40">
+                                    <div>
+                                        <p class="mb-0 small"><strong><%= invitation.messageInvitation %></strong></p>
+                                        <small class="text-muted">invitation envoyé le <%=  new Date(invitation.createdAt).toLocaleDateString() %></small>
+                                    </div>
+                                </div>
+                            </li>
+                        <% }) %>
+                        <li>
+                            <a class="dropdown-item btn btn-link text-center" href="/projects/<%= oneProject.id %>/invitations">Afficher tout</a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link  d-flex align-items-center" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+                        <img src="/img/members/<%= member.avatar %>" alt="User Avatar" class="rounded-circle me-2" width="40">
+                        <%= member.name.split(' ')[0] %>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                        <li class="d-flex justify-content-start">
+                            <a data-bs-toggle="modal" data-bs-target="#profileModal" class="dropdown-item fs-6">
+                                <i class="fa-solid fa-address-card me-2"></i>
+                                Profile
+                            </a>
+                        </li>
+                        <li class="d-flex justify-content-start">
+                            <a class="dropdown-item fs-6" data-bs-toggle="modal" data-bs-target="#settingsModal">
+                                <i class="fa-solid fa-gear me-2"></i>
+                                paramétre
+                            </a>
+                        </li>
+                        <li class="d-flex justify-content-start">  
+                            <button id="logout-button" class="dropdown-item fs-6">
+                                <i class="fa-solid fa-right-from-bracket me-2"></i>
+                                déconnexion
+                            </button>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<!-- add project Modal -->
+<div class="modal fade" id="addProjet" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+    <form id="addProjectForm" method="post">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Ajouter un Projet</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <!-- formulaire d'ajout de projet -->
+          
+            <div class="mb-3">
+                <label for="projectName" class="form-label">Nom du Projet</label>
+                <input type="text" class="form-control" id="projectName" name="name" required>
+            </div>
+            <div class="mb-3">
+                <label for="projectDescription" class="form-label">Description</label>
+                <textarea class="form-control" id="projectDescription" name="description" rows="3"></textarea>
+            </div>
+            <div class="mb-3">
+                <label for="projectStartAt" class="form-label">Date de Début</label>
+                <input type="date" class="form-control" id="projectStartAt" name="startAt" required>
+            </div>
+            <div class="mb-3">
+                <label for="projectEndAt" class="form-label">Date de Fin</label>
+                <input type="date" class="form-control" id="projectEndAt" name="endAt" required>
+            </div>
+            <input type="hidden" value="<%= member.id %>" id="chef" />
+        
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Ajouter Projet</button>
+        </div>
+    </form>
+      </div>
+    </div>
+  </div>
+
+<!-- profile Modal -->
+<div class="modal fade" id="profileModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-body">
+            <div class="card" style="border-radius: 15px;">
+                <div class="card-body text-center">
+                  <div class="mt-3 mb-4">
+                    <img src="/img/members/<%= member.avatar %>"
+                      class="rounded-circle img-fluid" style="width: 100px;" />
+                  </div>
+                  <h4 class="mb-2">Mr <%= member.name %></h4>
+                  <p class="text-muted mb-4">@<%= member.role %> <span class="mx-2">|</span> <a
+                      href="#!"><%= member.email %></a></p>
+                  <div class="mb-4 pb-2">
+                    <button  type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-outline-primary btn-floating">
+                      <i class="fab fa-facebook-f fa-lg"></i>
+                    </button>
+                    <button  type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-outline-primary btn-floating">
+                      <i class="fab fa-twitter fa-lg"></i>
+                    </button>
+                    <button  type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-outline-primary btn-floating">
+                      <i class="fab fa-skype fa-lg"></i>
+                    </button>
+                  </div>
+                  <!-- div pour le numero de telephone et l'adresse -->
+                  <div class="d-flex flex-column">
+                    <p class="mb-1  h5">
+                      <i class="fa-solid fa-phone-volume"></i>
+                      téléphone
+                    </p>
+                    <p class="text-muted mt-1 small mb-1">
+                      +216-<%= member.phone %>
+                      <img width="30" height="30" src="/img/tunisie.png" class="rounded-pill img-fluid" />
+                    </p>
+                      
+                  </div>
+                  <div class="d-flex flex-column">
+                    <p class="mb-1  h5">
+                      <i class="fa-solid fa-map-location-dot"></i>
+                      addresse
+                    </p>
+                    <p class="text-muted small mb-0"><%= member.addresse %></p>
+                  </div>
+                  
+                  <div class="d-flex justify-content-between text-center mt-5 mb-2">
+                    <div>
+                      <% if(member.role == 'member') { %>
+                      <p class="mb-2 h5"><%= projects.length %></p>
+                      <p class="text-muted mb-0">integration projet</p>
+                      <% } else {%>
+                        <p class="mb-2 h5"><%= projects.length %></p>
+                        <p class="text-muted mb-0">projet realiser</p>
+                      <% } %>
+                    </div>
+                    <div class="px-3">
+                        <% if(member.role == 'chef-projet') { %>
+                            <p class="mb-2 h5"><%= projects.reduce((count, proj) => {
+                                return proj.members ? count + proj.members.length : count;
+                              }, 0) %></p>
+                            <p class="text-muted mb-0">membres gérer</p>
+                            <% } else {%>
+                              <p class="mb-2 h5"><%=  projects.reduce((count, proj) => {
+                                return proj.members.find(m=>m.id === member.id) ? count + 1 : count;
+                              }, 0) %></p>
+                              <p class="text-muted mb-0">projets assignee</p>
+                            <% } %>
+                    </div>
+                    <div>
+                        <% if(member.role == 'chef-projet') { %>
+                            <p class="mb-2 h5">24</p>
+                            <p class="text-muted mb-0">ticket finalisé</p>
+                            <% } else {%>
+                              <p class="mb-2 h5"><%=  invitations.filter(invi => invi.status == 'pending').length %></p>
+                              <p class="text-muted mb-0">invitation en attente</p>
+                            <% } %>
+                    </div>
+                  </div>
+                </div>
+              </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<!-- end of profile Modal-->
+
+<!-- settings Modal -->
+<div class="modal fade modal-lg" id="settingsModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Paramétrer Votre compte</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body result-message">
+        <!-- settings form -->
+            <div class="container">
+              <div class="row">
+                <div class="col-md-3 card shadow p-1 me-5 d-flex justify-content-center align-items-center flex-column">
+                  <!-- img place -->
+                  <img src="/img/members/<%= member.avatar %>" alt="User profile picture" width="80" height="80" class="img-fluid rounded-circle">
+                  <h4 class="card-title"><%= member.name.split(' ')[0] %></h4>
+                  <p class="text-muted small"><%= member.email %></p>
+                  <p class="fs-6 fw-semibold">vous ête un <span class="badge bg-warning rounded-pill"><%= member.role %></span></p>
+                  <a href="/projects/<%= oneProject.id%>/members?id=<%= oneProject.id %>" class="btn btn-outline-primary mb-3">invitations</a>
+                </div>
+                <div class="col-md-8 card shadow p-1">
+                  <!-- form de data -->
+                  <form id="settingsForm" class="container mt-2">
+                    <div class="row">
+                        <div class=" form-floating mb-3">
+                            <input type="text" class="form-control" value="<%= member.name %>" id="name" name="name" placeholder="Nom" required minlength="3" maxlength="50">
+                            <label for="name">nom complet</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6 form-floating mb-3">
+                            <input type="email" class="form-control" value="<%= member.email %>" id="email" name="email" placeholder="Email" required>
+                            <label for="email">Email</label>
+                        </div>
+                        <div class="col-6 form-floating mb-3">
+                            <input type="text" class="form-control" value="<%= member.addresse %>" id="addresse" name="addresse" placeholder="Adresse">
+                            <label for="addresse">Adresse</label>
+                        </div>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="phone" value="<%= member.phone %>" name="phone" placeholder="Téléphone" required minlength="8">
+                        <label for="phone">Téléphone</label>
+                    </div>
+                    <div class="mb-3">
+                        <label for="avatar" class="form-label">Avatar</label>
+                        <input type="file" class="form-control" id="avatar" name="avatar">
+                    </div>
+                    <div class="d-flex justify-content-center">
+                        <button type="submit" class="btn btn-primary mb-2">Enregistrer les modifications</button>
+                    </div>
+                </form>
+
+                </div>
+              </div>
+              <div class="row mt-4">
+                <div class="col-md-12 card shadow p-1 ">
+                    <h4 class="card-title">Changement de mot de passe</h4>
+                    <form id="changePasswordForm" class="container mt-2">
+                        <div class="row">
+                            <div class="col-md-4 form-floating mb-3">
+                                <input type="password" class="form-control" id="currentPassword" name="currentPassword" placeholder="Mot de passe actuel" required>
+                                <label for="currentPassword">Mot de passe actuel</label>
+                            </div>
+                            <div class="col-md-4 form-floating mb-3">
+                                <input type="password" class="form-control" id="newPassword" name="newPassword" placeholder="Nouveau mot de passe" required>
+                                <label for="newPassword">Nouveau mot de passe</label>
+                            </div>
+                            <div class="col-md-4 form-floating mb-3">
+                                <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="Confirmer le mot de passe" required>
+                                <label for="confirmPassword">Confirmer le mot de passe</label>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-center">
+                            <button type="submit" class="btn-save-password btn btn-outline-primary mb-2">Modifier le mot de passe</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            </div>
+        <!-- end of settings -->
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- end settings modal -->

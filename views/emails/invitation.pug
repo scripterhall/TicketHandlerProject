@@ -1,0 +1,31 @@
+extends baseEmail
+
+block content 
+    p Bonjour #{firstName},
+    p Vous avez été invité à rejoindre le groupe #{groupName} sur ProjetX, votre solution de gestion de tickets de projet 🎉🙏
+    p Pour rejoindre le groupe, cliquez sur le bouton ci-dessous :
+
+    table.btn.btn-primary(role='presentation', border='0', cellpadding='0', cellspacing='0')
+        tbody
+            tr
+                td(align='left')
+                    table(role='presentation', border='0', cellpadding='0', cellspacing='0')
+                        tbody
+                            tr
+                                td
+                                    a(href=`${acceptUrl}`, target='_blank', style="background-color: green; color: white; padding: 10px 15px; text-decoration: none; border-radius: 5px;") ✅ Accepter l'invitation
+
+    p Si vous ne souhaitez pas rejoindre le groupe, vous pouvez refuser en cliquant ci-dessous :
+
+    table.btn.btn-danger(role='presentation', border='0', cellpadding='0', cellspacing='0')
+        tbody
+            tr
+                td(align='left')
+                    table(role='presentation', border='0', cellpadding='0', cellspacing='0')
+                        tbody
+                            tr
+                                td
+                                    a(href=`${declineUrl}`, target='_blank', style="background-color: red; color: white; padding: 10px 15px; text-decoration: none; border-radius: 5px;") ❌ Refuser l'invitation
+
+    p Si vous avez des questions ou besoin d'aide pour rejoindre le groupe, n'hésitez pas à nous contacter !
+    p - L'équipe ProjetX

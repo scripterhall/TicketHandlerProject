@@ -1,0 +1,80 @@
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<div id="stats-data"
+     data-todo="<%= stats.TODO %>"
+     data-doing="<%= stats.DOING %>"
+     data-done="<%= stats.DONE %>">
+</div>
+<canvas id="myPieChart"  width="300" height="300" style="max-width: 300px;max-height:300px;margin-left:25%;"></canvas>
+<div class="d-flex justify-content-evenly mt-5">
+  <i class="text-success fs-2 fa-duetone fa-solid fa-thumbs-up"></i>
+  <i class="text-warning fs-2 fa-sharp fa-solid fa-hourglass-half"></i>
+  <i class="text-danger fs-2 fa-sharp fa-solid fa-thumbs-down"></i>
+
+</div>
+<div class="d-flex justify-content-evenly mt-2">
+    <h2 class="ms-2">
+        <%= stats.DONE %>%
+    </h2>
+    <h2 class="ms-2">
+      <%= stats.DOING %>%
+    </h2>
+    <h2 class="ms-2">
+      <%= stats.TODO %>%
+    </h2>
+</div>
+<div class="d-flex justify-content-evenly mt-3">
+  <p class="small">
+    termine
+  </p>
+  <p class="small">
+    en cours
+  </p>
+  <p class="small">
+    en attente
+  </p>
+</div>
+<script>
+    const statsElement = document.getElementById('stats-data');
+    const stats = {
+      TODO: parseFloat(statsElement.dataset.todo),
+      DOING: parseFloat(statsElement.dataset.doing),
+      DONE: parseFloat(statsElement.dataset.done)
+    };
+   
+    const data = {
+      labels: ['TODO', 'DOING', 'DONE'],
+      datasets: [{
+        label: 'Répartition des tickets (%)',
+        data: [stats.TODO, stats.DOING, stats.DONE],
+        backgroundColor: [
+          'rgba(220, 38, 38, 0.7)',   // TODO - $danger - #dc2626
+          'rgba(245, 158, 11, 0.7)',  // DOING - $warning - #f59e0b
+          'rgba(22, 163, 74, 0.7)'    // DONE - $success - #16a34a
+        ],
+        borderColor: [
+          'rgba(220, 38, 38, 0.7)',
+          'rgba(245, 158, 11, 0.7)',
+          'rgba(22, 163, 74, 0.7)'
+        ],
+        borderWidth: 1
+      }]
+    };
+  
+    const config = {
+      type: 'pie',
+      data: data,
+      options: {
+        plugins: {
+          tooltip: {
+            callbacks: {
+              label: function(context) {
+                return `${context.label}: ${context.raw}%`;
+              }
+            }
+          }
+        }
+      }
+    };
+  
+    new Chart(document.getElementById('myPieChart'), config);
+</script>

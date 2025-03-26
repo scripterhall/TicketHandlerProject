@@ -1,0 +1,46 @@
+<div class="d-flex flex-column flex-shrink-0 p-3 bg-light sidebar">
+    <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">
+        <img src="/img/Title.png" class="img-fluid w-100"  height="20" />
+    </a>
+    <hr>
+    <ul class="nav nav-pills flex-column mb-auto">
+        <li class="nav-item">
+            <a href="/?id=<%= project.id %>" class="nav-link d-flex justify-content-start <% if(title ==='dashboard'){ %>active <% } %>">
+                <i class="fa-solid fs-5 fa-gauge me-2" style="margin-top: 2px;"></i>
+                Dashboard
+            </a>
+        </li>
+        <li>
+            <a href="/projects/<%= project.id%>/members?id=<%= project.id %>" class="d-flex justify-content-start nav-link  <% if(title ==='Members'){ %>active <% } %> ">
+                <i class="fa-solid fs-5 fa-users me-2" style="margin-top: 2px;"></i>
+                Members
+            </a>
+        </li>
+        <% if(member.role === 'member'){ %>
+            <li>
+                <a href="/projects/<%= project.id %>/invitations" class="d-flex justify-content-start nav-link <% if(title ==='Invitations'){ %>active <% } %>">
+                    <i class="fa-solid fa-door-open fs-5 me-2" style="margin-top: 2px;"></i>
+                    invitations
+                </a>
+            </li>
+        <% } %>
+        <li>
+            <a href="/projects/<%= project.id%>/tickets?id=<%= project.id %>" class="d-flex justify-content-start <% if(title ==='Tickets'){ %>active <% } %> nav-link ">
+                <i class="fa-solid fa-ticket fs-5 me-2" style="margin-top: 2px;"></i>
+                tickets
+            </a>
+        </li>
+        <li>
+            <a href="/projects/<%= project.id %>/normal-tickets?id=<%= project.id %>" class="d-flex justify-content-start nav-link <% if(title ==='Normal Tickets'){ %>active <% } %>">
+                <i class="fa-solid fs-5 fa-ticket-simple me-2" style="margin-top: 2px;"></i>
+                Normal Tickets
+            </a>
+        </li>
+        <li>
+            <a href="/projects/<%= project.id %>/composed-tickets?id=<%= project.id %>" class="d-flex justify-content-start nav-link <% if(title ==='Composed Tickets'){ %>active <% } %>">
+                <i class="fa-solid fs-5 fa-clipboard-list me-2" style="margin-top: 2px;"></i>
+                Composed Tickets
+            </a>
+        </li>
+    </ul>
+</div>

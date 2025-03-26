@@ -1,0 +1,74 @@
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>login Page</title>
+    <link rel="stylesheet" href="/css/bootstrap.css">
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/fontawesome.css">
+    <style>
+        body {
+            background-color: #1e293b; /* Couleur principale */
+            color: #f1f5f9; /* Texte clair */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .login-container {
+            background-color: #334155; /* Secondaire */
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 400px;
+        }
+        .form-control {
+            background-color: #1e293b;
+            color: #f1f5f9;
+            border: 1px solid #475569;
+        }
+        .form-control:focus {
+            background-color: #1e293b;
+            color: #f1f5f9;
+            border-color: #0ea5e9; /* Info */
+            box-shadow: 0 0 5px #0ea5e9;
+        }
+        .btn-primary {
+            background-color: #0ea5e9;
+            border: none;
+        }
+        .btn-primary:hover {
+            background-color: #0284c7;
+        }
+        .error-message {
+            color: #dc2626; /* Rouge erreur */
+        }
+    </style>
+</head>
+<body>
+
+<div class="login-container">
+    <h2 class="text-center">Connexion</h2>
+  
+    <form class="login-form" method="post" >
+        <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" id="email" name="email" class="form-control" required placeholder="Votre email">
+        </div>
+        <div class="mb-3">
+            <label for="password" class="form-label">Mot de passe</label>
+            <input autocomplete="off" type="password" id="password" name="password" class="form-control" required placeholder="Votre mot de passe">
+        </div>
+        <button type="submit" class="btn btn-primary w-100">Se connecter</button>
+    </form>
+    
+    <p class="text-center mt-3">
+        <a href="/register" class="text-info">Créer un compte</a> | 
+        <a href="/forgot-password" class="text-warning">Mot de passe oublié ?</a>
+    </p>
+    
+</div>
+<script src="/js/bootstrap.bundle.min.js"></script>
+<script src="/js/bundle.js"></script>
+</body>
+

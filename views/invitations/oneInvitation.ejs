@@ -1,0 +1,69 @@
+<tr>
+    <td>
+      <div class="d-flex align-items-center">
+        <img
+            src="/img/members/<%= invitation.chefProjet.avatar %>"
+            alt=""
+            style="width: 45px; height: 45px"
+            class="rounded-circle"
+            />
+        <div class="ms-3">
+          <p class="fw-bold mb-1"><%= invitation.chefProjet.name %></p>
+          <p class="text-muted mb-0"><%= invitation.chefProjet.email %></p>
+        </div>
+      </div>
+    </td>
+    <td>
+      <p class="fw-normal mb-1"><%= invitation.project.name %></p>
+      <p class="text-muted small mb-0"><%= invitation.project.description %></p>
+    </td>
+    <td>
+        <p class="mb-0 small"><%= invitation.messageInvitation %></p>
+    </td>
+    <td>
+      <button type="button" data-bs-toggle="modal" data-bs-target="#acceptModal<%= invitation.id %>" class="btn btn-outline-primary btn-sm btn-rounded">
+        Accepter
+      </button>
+      <button type="button" data-bs-toggle="modal" data-bs-target="#declineModal<%= invitation.id %>" class="btn btn-outline-danger btn-sm btn-rounded">
+        Refuser
+      </button>
+    </td>
+  </tr>
+
+  <!-- accept Modal -->
+<div class="modal fade" id="acceptModal<%= invitation.id %>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Accepter invitation</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body modal-body">
+          <p class="fw-medium fs-6">Vous êtes sur d'accepter L'invitation</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" id="accepterBtn<%= invitation.id %>" class="btn btn-primary">accepter</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- decline Modal -->
+  <div class="modal fade" id="declineModal<%= invitation.id %>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Refuser invitation</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body invitation-modal-body<%= invitation.id %>">
+          <p class="fw-medium fs-6">Vous êtes sur de refuser L'invitation</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" id="refuserBtn<%= invitation.id %>" class="btn btn-primary">Refuser</button>
+        </div>
+      </div>
+    </div>
+  </div>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/css/bootstrap.css">
+    <link rel="stylesheet" href="/css/styles.css">
+    <!-- favicon /favicon.ico-->
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+
+    <link rel="stylesheet" href="/css/fontawesome.css" />
+</head>
+<body class="d-flex flex-column min-vh-100">
+    <%- include('partials/navbar', { member: member, projects: projects,invitations:invitations,oneProject:oneProject }) %>
+    
+    <div class="container-fluid">
+        <div class="row">
+            <div class="ms-0 col-md-2">
+                <%- include('partials/sidebar',{project:oneProject,member:member,title:title}) %>
+            </div>
+            <div class="col-md-10">
+                <main>
+                    <!-- Contenu de votre page ici -->
+                    <%- include('partials/project/dashboardHeader',{project:oneProject,projects:projects}) %>
+                    <div class="container-fluid mt-5">
+                        <div class="card">
+                            <div class="card-header d-flex justify-content-center">
+                            les 10 tickets les plus visités du projet <i class="rounded-pill bg-primary ms-1 text-light pe-1 ps-1"> <%= oneProject.name %></i>
+                            </div>
+                            <div class="card-body p-0">
+                                <%- include('partials/project/ticketsTable',{tickets:oneProject.tickets}) %>   
+                            </div>
+                            <div class="d-flex card-footer text-body-secondary justify-content-center">
+                                <a href="/projects/<%= oneProject.id %>/tickets?id=<%= oneProject.id %>" class="text-info" style="text-decoration: none;font-weight:500;">voire toute les tickets</a>
+                            </div>
+                          </div>
+                    </div>
+                    <div class="container-fluid mt-5 mb-5 ">
+                        <!-- un row qui contient deux col col-5 qui contient un fragment de statsChart.ejs 
+                        et un col-6 qui contient un appel au fragment membersTable.ejs en faite les deux col sont des carte bootstrap 
+                        -->
+                        <div class="row ms-1">
+                            <div class="d-flex mb-4 col-md-5 me-5 card shadow p-2">
+                                <%- include('partials/project/statsChart',{stats:stats}) %>
+                            </div>
+                            <div class="col-md-6 mb-4 ms-5 card shadow p-2">
+                                <%- include('partials/project/membersTable',{members:oneProject.members}) %>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+            </div>
+        </div>
+    </div>
+
+    <%- include('partials/footer') %>
+
+    <script src="/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/bundle.js"></script>
+</body>
+</html>

@@ -1,0 +1,26 @@
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Role</th>
+            <th scope="col">Projet Associe</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% members.forEach(member => { %>
+            <tr>
+                <td>
+                    <div class="d-flex align-items-center">
+                        <img src="/img/members/<%= member.avatar %>" class="rounded-circle" width="40" height="40" alt="<%= member.name %>">
+                        <div class="ms-3">
+                            <p class="mb-0"><strong><%= member.name %></strong></p>
+                            <p class="mb-0"><small><%= member.email %></small></p>
+                        </div>
+                    </div>
+                </td>
+                <td><%= member.role %></td>
+                <td><%= projects.filter(p => p.members.find(m=> m.id ==member.id)).length %> projet(s)</td>
+            </tr>
+        <% }) %>
+    </tbody>
+</table>

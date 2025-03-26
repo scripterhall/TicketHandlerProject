@@ -1,6 +1,7 @@
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 const APIFeatures = require('../utils/apiFeatures');
+const Ticket = require('../models/ticketModel');
 
 exports.deleteOne = Model => catchAsync(async (req, res, next) => {
     const document = await Model.findByIdAndUpdate(req.params.id, { active: false });
@@ -14,12 +15,22 @@ exports.deleteOne = Model => catchAsync(async (req, res, next) => {
 });
 
 exports.updateOne = Model => catchAsync(async (req, res, next) => {
+    
     const newDocument = await Model.findByIdAndUpdate(req.params.id, req.body, {
         new: true,
         runValidators: true
     });
     if (!newDocument) {
         return next(new AppError('No document found with that ID', 404));
+    }
+    if(req.originalUrl.includes('/normal-tickets')) {
+        
+        //Upadate parentTicket state to Done if all child tickets are done from childTickets
+        if(newDocument.parentTicket.subTickets.every(t => t.state === 'Done')) {
+            
+            await Ticket.findByIdAndUpdate(newDocument.parentTicket._id, { state: 'Done' });
+        }
+
     }
     res.status(200).json({
         status: 'success',
@@ -67,6 +78,8 @@ exports.getAll = Model => catchAsync(async (req, res, next) => {
             ]
         };
     }
+
+    
     const features = new APIFeatures(Model.find(filter), req.query)
         .filter()
         .sort()

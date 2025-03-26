@@ -1,0 +1,64 @@
+<div class="col-12 mt-3 d-flex">
+    <div class="p-2 flex-fill">
+        <!-- un bouton input pour chercher un membre dans le projet -->
+        <div class="input-group mb-3">
+            <span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-magnifying-glass"></i></span>
+            <input type="text" class="form-control" placeholder="Find a Memberby name or email ..." aria-label="Username" aria-describedby="basic-addon1">
+             <!-- un bouton pour affihcer les pending invitation -->
+            <button  class="btn btn-outline-light border-info text-info me-3">search members</button>
+        </div>
+    </div>
+    <div class="pb-4 flex-fill d-flex justify-content-center">
+       
+        <!-- un bouton pour ajouter un nouveau membre -->
+        <button style="border: 2px solid #70d997;" data-bs-toggle="modal" data-bs-target="#inviteMember" class="btn btn-success  shadow p-2  text-light me-3">
+            Add a Member
+        </button>
+     
+    </div>
+    
+</div>
+
+<!--Invitation Modal -->
+<div class="modal  fade " id="inviteMember" tabindex="-1" aria-labelledby="inviteMemberLabel" aria-hidden="true">
+    <div class="modal-dialog ">
+      <div class="modal-content" style="min-width: 700px;min-height: 500px;">
+        <div class="modal-header  border-bottom-0 ">
+           <div class="row result-message d-block ms-auto mt-4 align-items-center">
+            <i class="fa-solid text-center fa-users  fs-1 text-secondary"></i>
+          <br>
+          <br>
+          <h1 class="modal-title fs-3 " id="exampleModalLabel">Add members to <strong><ins><i><%= project.name %></i></ins></strong></h1>
+           </div>
+           <button style="margin-top:-5rem;" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> 
+        </div>
+        <div class="modal-body">
+         <div class="row mb-3">
+            <div class="input-group ms-2 mb-3">
+                <span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-user"></i></span>
+                <input type="text" id="email-filter"  class="form-control p-2" placeholder="Chercher par email ..." aria-label="Username" aria-describedby="basic-addon1">
+              </div>
+         </div>
+         <div class="row me-1">
+            <div id="all-members" data-appmembers="<%= JSON.stringify(allMembers) %>"></div>
+            <!-- liste des membres valider par l'email saisie par email  -->
+            <h5 class="">Invitations <span class="badge bg-secondary rounded-circle small"><i class="fa-solid fa-hands-holding-child"></i></span></h5>
+            <hr>
+            <ul class="list-group list-group-flush ps-3 pe-3  members-list">
+              
+            </ul>
+         </div>
+        </div>
+        <div class="modal-footer">
+          <input type="hidden" value="<%= project.id %>" id="project-id" />
+          <input type="hidden" value="<%= project.name %>" id="project-name" />
+          <button type="button" class="close-btn btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+<!-- end of invitation modal-->
+
+<!-- searchMemberModal-->
+
+<!-- end searchMemberModal-->

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/css/bootstrap.css">
+    <link rel="stylesheet" href="/css/styles.css">
+    <!-- favicon /favicon.ico-->
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+
+    <link rel="stylesheet" href="/css/fontawesome.css" />
+</head>
+<body class="d-flex flex-column min-vh-100">
+    <%- include('partials/navbar', { member: member, projects: projects,invitations:invitations,oneProject:oneProject }) %>
+    
+    <div class="container-fluid">
+        <div class="row">
+            <div class="ms-0 col-md-2 " style="min-height: 800px;">
+                <%- include('partials/sidebar',{project:oneProject,member:member,title:title}) %>
+            </div>
+            <div class="col-md-10">
+                <main>
+                    <!-- Contenu de votre page ici -->
+                    <div class="container-fluid mt-3">
+                        <div class="row">
+                            <%- include('partials/tickets/ticketHeader.ejs', { member:member,oneProject:oneProject,tickets: tickets }) %>
+                        </div>
+                        <div class="row">
+                            <!-- include le scrum board from partials/tickets -->
+                            <%- include('partials/tickets/scrumBoard.ejs', { tickets: tickets }) %>
+                        </div>
+                    </div>
+                </main>
+            </div>
+        </div>
+    </div>
+
+    <%- include('partials/footer') %>
+
+    <script src="/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/bundle.js"></script>
+</body>
+</html>

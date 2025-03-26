@@ -1,0 +1,102 @@
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page Inscription</title>
+    <link rel="stylesheet" href="/css/bootstrap.css">
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/fontawesome.css">
+    <style>
+        body {
+            background-color: #1e293b; /* Couleur principale */
+            color: #f1f5f9; /* Texte clair */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .register-container {
+            background-color: #334155; /* Secondaire */
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 500px;
+        }
+        .form-control {
+            background-color: #1e293b;
+            color: #f1f5f9;
+            border: 1px solid #475569;
+        }
+        .form-control:focus {
+            background-color: #1e293b;
+            color: #f1f5f9;
+            border-color: #0ea5e9; /* Info */
+            box-shadow: 0 0 5px #0ea5e9;
+        }
+        .btn-primary {
+            background-color: #0ea5e9;
+            border: none;
+            transition: background-color 0.3s ease;
+        }
+        .btn-primary:hover {
+            background-color: #0284c7;
+        }
+        .error-message {
+            color: #dc2626; /* Rouge erreur */
+        }
+        .form-floating > label {
+            color: #94a3b8; /* Couleur des labels */
+        }
+        img{
+            box-shadow: 3px 5px 19px rgba(255, 255, 255, 0.7) ;
+        }
+    </style>
+</head>
+<body>
+
+<div class="register-container">
+    <div class="d-flex justify-content-center align-items-center flex-column mb-3 ">
+        <img src="/img/ProjetX.png" class="img-fluid border rounded-circle" width="170" height="170" />
+    </div>
+    <form id="registerForm">
+        <div class="form-floating mb-3">
+            <input type="text" class="form-control" id="name" name="name" placeholder="Nom" required minlength="3" maxlength="50">
+            <label for="name">Nom</label>
+        </div>
+        <div class="form-floating mb-3">
+            <input type="email" class="form-control" id="email" name="email" placeholder="Email" required>
+            <label for="email">Email</label>
+        </div>
+        <div class="form-floating mb-3">
+            <input type="password" class="form-control" id="password" name="password" placeholder="Mot de passe" required minlength="8">
+            <label for="password">Mot de passe</label>
+        </div>
+        <div class="form-floating mb-3">
+            <input type="password" class="form-control" id="passwordConfirm" name="passwordConfirm" placeholder="Confirmer le mot de passe" required minlength="8">
+            <label for="passwordConfirm">Confirmer le mot de passe</label>
+        </div>
+        <div class="form-floating mb-3">
+            <input type="text" class="form-control" id="phone" name="phone" placeholder="Téléphone" required minlength="8">
+            <label for="phone">Téléphone</label>
+        </div>
+        <div class="form-floating mb-3">
+            <input type="text" class="form-control" id="addresse" name="addresse" placeholder="Adresse">
+            <label for="addresse">Adresse</label>
+        </div>
+        <div class="form-floating mb-3">
+            <select class="form-select" id="role" name="role" aria-label="Rôle">
+                <option value="member" selected>Membre</option>
+                <option value="chef-projet">Chef de Projet</option>
+            </select>
+            <label for="role">Rôle</label>
+        </div>
+        <div class="d-flex justify-content-evenly">
+            <button type="submit" class="btn btn-primary">S'inscrire</button>
+            <a href="/login" class="btn btn-outline-info text-white">Retoure</a>
+        </div>
+    </form>
+</div>
+
+<script src="/js/bootstrap.bundle.min.js"></script>
+<script src="/js/bundle.js"></script>
+</body>
