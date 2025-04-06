@@ -14,10 +14,11 @@
                                 <span class="badge bg-primary"><%= new Date(ticket.createdAt).toLocaleDateString() %></span>
                                 <p class="card-text mt-2 small"><%= ticket.description.length > 60 ? ticket.description.substring(0, 60) + '…' : ticket.description  %></p>
                                 <div class="d-flex justify-content-between align-items-center">
-                                    <span class="badge bg-info"><%= ticket.assignee.name %></span>
+                                    <span class="badge assignee-name bg-info"><%= ticket.assignee.name %></span>
                                     <div class="dropdown">
                                         <img class="dropdown-toggle rouded-circle" src="/img/members/<%= ticket.assignee.avatar %>" width="35" height="35" data-bs-toggle="dropdown" aria-expanded="false" />
                                         <ul  class="dropdown-menu">
+                                            <div id="projectMembers" data-members="<%= JSON.stringify(oneProject.members) %>" style="display: none;"></div>
                                             <% oneProject.members.forEach(member => { %>
                                               <li><button  data-ticket="<%= ticket.id %>" data-assignee="<%= member.id %>" class="dropdown-item changeAssigneeToDo d-flex justify-content-start" type="button">
                                                 <img src="/img/members/<%= member.avatar %>" class="rounded-circle me-2" width="35" height="35" />
@@ -109,7 +110,3 @@
     </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
-
-<script>
-    
-</script>

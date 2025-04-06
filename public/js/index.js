@@ -1,9 +1,11 @@
-import {login,logout,register} from './login.js';
+import { login,logout,register } from './login.js';
 import { sendInvitation } from './memberAndInvitations.js';
-import {acceptInvitation,declineInvitation,declineInvitationFromInvitationsPage,acceptInvitationFromInvitationsPage,updateProfile} from './memberAndInvitations.js';
-import {addNormalTicket,addComposedTicket} from './ticketClient.js';
-import {changeAssignee,editNormalTicket,deleteTicketNormal,doneTicket,editComposedTicket,deleteTicketCompose} from './ticketClient.js';
+import { acceptInvitation,declineInvitation,declineInvitationFromInvitationsPage,acceptInvitationFromInvitationsPage,updateProfile } from './memberAndInvitations.js';
+import { addNormalTicket,addComposedTicket } from './ticketClient.js';
+import { changeAssignee,editNormalTicket,deleteTicketNormal,doneTicket,editComposedTicket,deleteTicketCompose } from './ticketClient.js';
 import { addProject} from './projectClient.js';
+import { ticketSocket } from './sockets/ticketClientSocket.js';
+import{ invitationSocket } from './sockets/invitationClientSocket.js';
 
 
 const loginForm = document?.querySelector('.login-form');
@@ -20,6 +22,7 @@ const settingsForm = document?.getElementById('settingsForm');
 const changePasswordForm = document?.getElementById('changePasswordForm');
 const logoutButton = document?.getElementById('logout-button');
 const registerForm = document?.getElementById('registerForm');
+const curProjectForm = document?.getElementById('curProjectForm');
 
 /**
 scrum board translations 
@@ -33,9 +36,9 @@ if (scrumBoardContainer) {
             group:"shared",
             animation: 150,
             onEnd: function (evt) {
-                
                 const ticketId= evt.item.dataset.ticketid;
                 const newStatus = evt.to.id;
+                const projectId = document.querySelector('.project-page').dataset.project; // Assurez-vous que cet élément existe
                 fetch(`/api/v1/normal-tickets/${ticketId}`,{
                     method: 'PATCH',
                     headers: {
@@ -45,6 +48,9 @@ if (scrumBoardContainer) {
                         state: newStatus
                     })
                 }).then(res => res.json()).then(data => {
+                      // Utiliser le socket pour mettre à jour le statut
+                      console.log('data = ',data)
+                        ticketSocket.emit('update-normal-ticket', data.data.data);
                     if(data.data.data.state == 'Done')
                         location.reload(true);
                 });
@@ -86,9 +92,6 @@ if (changeAssigneeToDo) {
 /**
  * ajouter un projet 
  */
-
-
-
 
 const addProjectForm = document.getElementById('addProjectForm');
 if (addProjectForm) {
@@ -166,7 +169,11 @@ const renderFilteredMembers = () => {
                 const email = e.target.dataset.email;
                 const memberId = e.target.dataset.id;
                 const memberName = e.target.dataset.name;
-                await sendInvitation({ email: email, name: memberName, id: memberId }, projectId, projectName);
+                const invitation = await sendInvitation({ email: email, name: memberName, id: memberId }, projectId, projectName);
+                // use socket to emit the invitation to conserned member
+                console.log('invitation = ',invitation)
+                invitationSocket.emit('send-invitation', {invitation});
+
             });
         });
     }
@@ -205,7 +212,8 @@ if (addNormalTicketForm) {
             dueDate: document.getElementById('dueDate').value,
             assignee: document.getElementById('assignee').value
         }
-        await addNormalTicket(normalTicket);
+        const ticket = await addNormalTicket(normalTicket);
+        ticketSocket.emit('add-normal-ticket', ticket);
     });
 }
 
@@ -279,7 +287,8 @@ if (addComposedTicketForm) {
             assignee: document.getElementById('assignee').value,
             subTickets: subTickets
         }
-        await addComposedTicket(composedTicket);
+        const ticket = await addComposedTicket(composedTicket);
+        ticketSocket.emit('add-composed-ticket', ticket);
     });
 }
 
@@ -321,7 +330,9 @@ if(ticketsDiv){
         if(deleteTicketButton){
             deleteTicketButton.addEventListener('click', async (e) => {
                 e.preventDefault();
-                await deleteTicketNormal(ticketId);
+                 await deleteTicketNormal(ticketId);
+                const ticket = tickets.find(ticket => ticket._id === ticketId);
+                ticketSocket.emit('delete-normal-ticket', {ticketId: ticket.id, project: ticket.project});
             });
         }
         /**
@@ -382,6 +393,9 @@ if(composedTicketsDiv){
             deleteTicketButton.addEventListener('click', async (e) => {
                 e.preventDefault();
                 await deleteTicketCompose(ticketId);
+                //integrate socket to remove the ticket from the project
+                const composedTicket = composedTickets.find(ticket => ticket._id === ticketId);
+                ticketSocket.emit('delete-composed-ticket', {ticketId: composedTicket.id, project: composedTicket.project});
             });
         }
         /**
@@ -488,6 +502,46 @@ if(registerForm){
         await register(member);
     });
 }
+
+/**
+ * socket handling pour ticket 
+ */
+// Rejoindre un projet
+if (document?.querySelector('.project-page')) {
+    const {project} = document.querySelector('.project-page').dataset;
+    ticketSocket.emit('join-project', { projectId: project });
+}
+/**
+ * socket handling pour invitation
+ */
+if(document?.querySelector('.member-page')){
+    const {member} = document.querySelector('.member-page').dataset;
+    invitationSocket.emit('add-member', { memberId: member });
+}
+
+
+/**
+ * when switch from project to project re-use socket
+ */
+if(curProjectForm){
+    curProjectForm.addEventListener('submit', (e) => {
+        const {project} = document.querySelector('.project-page').dataset;
+        ticketSocket.emit('join-project', { projectId: project });
+        const {member} = document.querySelector('.member-page').dataset;
+        invitationSocket.emit('add-member', { memberId: member });
+
+        // Optionnel : Si vous voulez effectuer une action après l'émission du socket
+        // mais avant que la page ne se recharge, vous pouvez utiliser setTimeout
+        setTimeout(() => {
+            // Cette fonction sera exécutée juste après que l'événement soit émis
+            console.log('Switched to project:', project);
+        }, 0);
+
+        // Le formulaire sera soumis normalement, ce qui rechargera probablement la page
+    });
+}
+
+
 
 
 

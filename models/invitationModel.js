@@ -48,6 +48,21 @@ InvitationSchema.pre(/^find/, function(next) {
     next();
 });
 
+
+/**
+ * poplulation des member apres save
+*/
+InvitationSchema.post('save', async function(doc, next) {
+    await doc.populate({
+        path: 'member',
+        select: '-__v -passwordChangedAt -passwordResetToken -passwordResetExpiresAt -password',
+       
+    });
+    next();
+});
+
+
+
 const Invitation = mongoose.model('Invitation', InvitationSchema);
 
 module.exports = Invitation;

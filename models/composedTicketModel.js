@@ -38,6 +38,19 @@ composedTicketSchema.virtual('priority').get(function () {
     );
 });
 
+/**
+ * poplulation des sous-tickets apres save
+*/
+composedTicketSchema.post('save', async function(doc, next) {
+    await doc.populate({
+        path: 'subTickets',
+        select: '-__v -project  -updatedAt -active',
+       
+    });
+    next();
+});
+
+
 // recuperer les sous-tickets dans les requetes find
 composedTicketSchema.pre(/^find/, function (next) {
     this.populate({

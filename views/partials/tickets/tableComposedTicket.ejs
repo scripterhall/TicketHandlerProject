@@ -9,7 +9,8 @@
         <th>Actions</th>
       </tr>
     </thead>
-    <tbody>
+    <tbody id="table-composed-tickets">
+      <div id="projectMembers" data-members="<%= JSON.stringify(oneProject.members) %>" style="display: none;"></div>
       <% tickets.forEach((ticket,index) => { %>
          <%- include('./oneComposedTicket.ejs',{oneComposedTicket:ticket}) %>
       <%})%>

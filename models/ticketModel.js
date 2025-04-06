@@ -57,5 +57,6 @@ TicketSchema.pre(/^find/, function(next) {
     next();
 });
 
+
 module.exports = mongoose.model('Ticket', TicketSchema);
 

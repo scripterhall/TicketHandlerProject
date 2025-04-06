@@ -11,7 +11,9 @@
 
     <link rel="stylesheet" href="/css/fontawesome.css" />
 </head>
-<body class="d-flex flex-column min-vh-100">
+<body id="invitation-page" class="d-flex flex-column min-vh-100">
+    <div class="member-page" style="display: none;" data-member="<%= member.id %>"></div>
+
     <%- include('partials/navbar', { member: member, projects: projects,invitations:invitations,oneProject:oneProject }) %>
     <div class="container-fluid">
         <div class="row">

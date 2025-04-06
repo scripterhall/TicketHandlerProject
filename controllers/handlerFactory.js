@@ -26,7 +26,7 @@ exports.updateOne = Model => catchAsync(async (req, res, next) => {
     if(req.originalUrl.includes('/normal-tickets')) {
         
         //Upadate parentTicket state to Done if all child tickets are done from childTickets
-        if(newDocument.parentTicket.subTickets.every(t => t.state === 'Done')) {
+        if(newDocument?.parentTicket?.subTickets.every(t => t.state === 'Done')) {
             
             await Ticket.findByIdAndUpdate(newDocument.parentTicket._id, { state: 'Done' });
         }
