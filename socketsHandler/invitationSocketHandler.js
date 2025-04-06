@@ -7,7 +7,7 @@ exports.addOnlineMember = (socket, data) => {
     console.log('socket id: ', socket.id);
     console.log('====================================');
     if (!onLineMember.has(data.memberId)) {
-        onLineMember.set(data.memberId, socket.id);
+        onLineMember?.set(data.memberId, socket.id);
     }
 };
 
@@ -16,9 +16,13 @@ exports.sendInvitationToAMember = (socket, data) => {
     console.log('====================================');
     console.log('New invitation received: ', data);
     console.log('====================================');
-    if (onLineMember.has(data.invitation.member.id)) {
+    console.log('====================================');
+    console.log('all members: ', onLineMember);
+    console.log('====================================');
+    if (onLineMember?.has(data.invitation.member.id)) {
+        console.log('oui,Member online: ', data.invitation.member.id);
         const memberSocketId = onLineMember.get(data.invitation.member.id);
-        socket.to(memberSocketId).emit('newInvitation', data);
+        socket.to(memberSocketId).emit('newInvitation', data.invitation);
     } else {
         console.log('Member not online: ', data.invitation.member.id);
     }   
@@ -78,3 +82,12 @@ exports.disconnectMember = (socket) => {
         }
     }
 };
+
+function mapHasValue(map, searchValue) {
+    for (let value of map.values()) {
+        if (value === searchValue) {
+            return true;
+        }
+    }
+    return false;
+}

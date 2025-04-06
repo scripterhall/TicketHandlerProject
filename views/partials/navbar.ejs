@@ -35,7 +35,7 @@
                         <button type="button" class="btn btn-primary rounded-circle position-relative">
                             <i class="fa-solid fs-3 fa-bell">
                             </i>
-                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                            <span class="notification position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                               <%= invitations.length %>
                               <span class="visually-hidden">unread messages</span>
                             </span>
@@ -50,7 +50,7 @@
                         <% invitations?.forEach(invitation => { %>
                             <li class="dropdown-item">
                                 <div class="d-flex align-items-center">
-                                    <img src="/img/members/default.png" alt="Notification Icon" class="rounded-circle me-2" width="40">
+                                    <img src="/img/members/<%= invitation.member.avatar %>" alt="Notification Icon" class="rounded-circle me-2" width="40">
                                     <div>
                                         <p class="mb-0 small"><strong><%= invitation.messageInvitation %></strong></p>
                                         <small class="text-muted">invitation envoyé le <%=  new Date(invitation.createdAt).toLocaleDateString() %></small>

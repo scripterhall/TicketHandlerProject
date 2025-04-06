@@ -16,6 +16,7 @@ export const addNormalTicket = async (ticketData) => {
             },1500);   
         }
         showAlert("success", "Ticket créé avec succès", ".modal-body");
+        return ticket.data.data.data;
     } catch (error) {
         showAlert("danger", "Erreur lors de la création du ticket", ".ticket-form");
         console.error(error);
@@ -49,6 +50,7 @@ export  const addComposedTicket = async(ticketData) => {
             }, 1500);
         }
         showAlert("success", "Ticket créé avec succès", ".modal-body-composed");
+        return ticket.data.data.data;
     } catch (error) {
         showAlert("danger", "Erreur lors de la création du ticket", ".modal-body-composed");
         console.error(error);

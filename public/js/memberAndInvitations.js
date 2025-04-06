@@ -17,7 +17,9 @@ export const sendInvitation = async (member,projectId,projectName) => {
              showAlert('success','Invitation envoyé avec succès!','.result-message');
              window.setTimeout(() => {
                  location.reload();
+                 
              }, 1300);
+             return invitation.data.data;
         } else {
             showAlert('danger','Erreur lors de l\'envoi de l\'invitation, veuillez réessayer plus tard.','.result-message');
         }
