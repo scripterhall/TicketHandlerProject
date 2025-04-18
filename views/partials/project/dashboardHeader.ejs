@@ -1,38 +1,78 @@
-<div class="container mt-5 ms-5 ">
-    <div class="row d-flex justify-content-around ">
+<div class="container mt-5 ms-5">
+    <div class="row d-flex justify-content-around">
         <!-- Carte pour le nombre total de tickets -->
-        <div class="card col-3 shadow p-2 border border-primary"  style="width: 18rem;">
-            <div class="card-body">
-                <h5 class="card-title">Nombre total de Tickets</h5>
-                <h6 class="card-subtitle mb-2 text-body-secondary">Total</h6>
-                <p class="card-text"><%= project.tickets.length %></p>
+        <div class="col-md-3 col-sm-6">
+            <div class="card bg-primary text-white mb-4">
+                <div class="card-body">
+                    <h4 id="h4NbrTicket" class="card-title"><%= project.tickets.length %></h4>
+                    <div class="d-flex">
+                        <div class="card-text flex-grow-1">Nombre de Tickets</div>
+                        <div class="">
+                            <i class="fa-solid fa-ticket fs-5"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer d-flex align-items-center justify-content-between">
+                    <a class="small text-white stretched-link" href="#">Voir détails</a>
+                    <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                </div>
             </div>
         </div>
 
         <!-- Carte pour le nombre de tickets en TODO -->
-        <div class="card col-3 shadow p-2  border border-primary" style="width: 18rem;">
-            <div class="card-body">
-                <h5 class="card-title">Tickets TODO</h5>
-                <h6 class="card-subtitle mb-2 text-body-secondary">À faire</h6>
-                <p class="card-text"><%= project.tickets.filter(ticket => ticket.status === 'TODO').length %></p>
+        <div class="col-md-3 col-sm-6">
+            <div class="card bg-warning text-white mb-4">
+                <div class="card-body">
+                    <h4 class="card-title"><%= project.tickets.filter(ticket => ticket.state === 'Doing').length %></h4>
+                    <div class="d-flex">
+                        <div class="card-text flex-grow-1">Ticket En cours</div>
+                        <div class="">
+                            <i class="fa-solid fa-hourglass-half fs-5"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer d-flex align-items-center justify-content-between">
+                    <a class="small text-white stretched-link" href="#">Voir détails</a>
+                    <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                </div>
             </div>
         </div>
 
         <!-- Carte pour le nombre de tickets terminés -->
-        <div class="card col-3 shadow p-2  border border-primary" style="width: 18rem;">
-            <div class="card-body">
-                <h5 class="card-title">Tickets Terminés</h5>
-                <h6 class="card-subtitle mb-2 text-body-secondary">Complétés</h6>
-                <p class="card-text"><%= project.tickets.filter(ticket => ticket.status === 'DONE').length %></p>
+        <div class="col-md-3 col-sm-6">
+            <div class="card bg-success text-white mb-4">
+                <div class="card-body">
+                    <h4 class="card-title"><%= project.tickets.filter(ticket => ticket.state === 'Done').length %></h4>
+                    <div class="d-flex">
+                        <div class="card-text flex-grow-1">Ticket Terminés</div>
+                        <div class="">
+                            <i class="fa-solid fa-thumbs-up fs-5"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer d-flex align-items-center justify-content-between">
+                    <a class="small text-white stretched-link" href="#">Voir détails</a>
+                    <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                </div>
             </div>
         </div>
 
         <!-- Carte pour le nombre de membres -->
-        <div class="card col-3 shadow p-2  border border-primary" style="width: 18rem;">
-            <div class="card-body">
-                <h5 class="card-title">Nombre de Membres</h5>
-                <h6 class="card-subtitle mb-2 text-body-secondary">Membres du projet</h6>
-                <p class="card-text"><%= project.members.length %></p>
+        <div class="col-md-3 col-sm-6">
+            <div class="card bg-secondary text-white mb-4">
+                <div class="card-body">
+                    <h4 class="card-title"><%= project.members.length %></h4>
+                    <div class="d-flex">
+                        <div class="card-text flex-grow-1">Nombre de Membres</div>
+                        <div class="">
+                            <i class="fa-solid fa-users fs-5"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer d-flex align-items-center justify-content-between">
+                    <a class="small text-white stretched-link" href="#">Voir détails</a>
+                    <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                </div>
             </div>
         </div>
     </div>

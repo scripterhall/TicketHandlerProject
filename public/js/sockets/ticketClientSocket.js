@@ -1,4 +1,5 @@
 import {io} from 'socket.io-client';
+let globalChart; // Déclaration en dehors de la fonction
 
 /**
  * socket ticket pour le namespace ticket dans la socket de backend
@@ -21,16 +22,108 @@ ticketSocket.on('connect', () => {
 //new
 ticketSocket.on('newNormalTicket', (ticket) => {
     console.log('New normal ticket received in client:', ticket);
-    // Mettez à jour l'interface utilisateur ici 
-    if (ticket.state === 'Todo') {
-        const todoContainer = document.getElementById('Todo');
-        if (todoContainer) {
-            // Créez un nouvel élément de ticket
-            const newTicketElement = createTicketElement(ticket);
-            
-            // Ajoutez le nouveau ticket au début de la liste
-            todoContainer.insertAdjacentHTML('afterbegin', newTicketElement);
-            
+    
+    if(document?.getElementById('stats-data')){
+        ajouterTicketViaSocket(ticket)
+        const statsElement = document.getElementById('stats-data');
+        let todo = parseFloat(statsElement.dataset.todo);
+        let doing = parseFloat(statsElement.dataset.doing);
+        let done = parseFloat(statsElement.dataset.done);
+
+       // Calculez le nombre total de tickets actuel
+       const totalPercentage = todo + doing + done;
+       let totalTickets = 100 / totalPercentage;
+
+       // Ajoutez le nouveau ticket
+       totalTickets++;
+
+       // Recalculez les pourcentages
+       if (ticket.state === 'Todo') {
+           todo = ((todo * (totalTickets - 1) / 100) + 1) / totalTickets * 100;
+           doing = (doing * (totalTickets - 1) / 100) / totalTickets * 100;
+           done = (done * (totalTickets - 1) / 100) / totalTickets * 100;
+       } else if (ticket.state === 'Doing') {
+           todo = (todo * (totalTickets - 1) / 100) / totalTickets * 100;
+           doing = ((doing * (totalTickets - 1) / 100) + 1) / totalTickets * 100;
+           done = (done * (totalTickets - 1) / 100) / totalTickets * 100;
+       } else if (ticket.state === 'Done') {
+           todo = (todo * (totalTickets - 1) / 100) / totalTickets * 100;
+           doing = (doing * (totalTickets - 1) / 100) / totalTickets * 100;
+           done = ((done * (totalTickets - 1) / 100) + 1) / totalTickets * 100;
+       }
+
+       const stats = {
+           TODO: todo.toFixed(1),
+           DOING: doing.toFixed(1),
+           DONE: done.toFixed(1)
+       };
+
+       console.log('Stats:', stats);
+       
+        const data = {
+          labels: ['TODO', 'DOING', 'DONE'],
+          datasets: [{
+            label: 'Répartition des tickets (%)',
+            data: [stats.TODO, stats.DOING, stats.DONE],
+            backgroundColor: [
+              'rgba(220, 38, 38, 0.7)',   // TODO - $danger - #dc2626
+              'rgba(245, 158, 11, 0.7)',  // DOING - $warning - #f59e0b
+              'rgba(22, 163, 74, 0.7)'    // DONE - $success - #16a34a
+            ],
+            borderColor: [
+              'rgba(220, 38, 38, 0.7)',
+              'rgba(245, 158, 11, 0.7)',
+              'rgba(22, 163, 74, 0.7)'
+            ],
+            borderWidth: 1
+          }]
+        };
+      
+        const config = {
+          type: 'pie',
+          data: data,
+          options: {
+            plugins: {
+              tooltip: {
+                callbacks: {
+                  label: function(context) {
+                    return `${context.label}: ${context.raw}%`;
+                  }
+                }
+              }
+            }
+          }
+        };
+         // Utilisation
+         const newChartElement = recreateElement('myPieChart');
+         if (newChartElement) {
+             globalChart = new Chart(newChartElement, config);
+         }
+          // Mettez à jour les données dans l'élément stats-data
+            statsElement.dataset.todo = stats.TODO;
+            statsElement.dataset.doing = stats.DOING;
+            statsElement.dataset.done = stats.DONE;
+            const h2Todo = document.getElementById('ticket-todo');
+            const h2Doing = document.getElementById('ticket-doing');
+            const h2Done = document.getElementById('ticket-done');
+            h2Todo.innerHTML = stats.TODO + '%';
+            h2Doing.innerHTML = stats.DOING + '%';
+            h2Done.innerHTML = stats.DONE + '%';
+            const h4NbrTicket = document.getElementById('h4NbrTicket');
+            //recuperer le text de h4NbrTicket et incrementer
+            h4NbrTicket.innerHTML = parseInt(h4NbrTicket.innerHTML) + 1;
+    }else{
+        // Mettez à jour l'interface utilisateur ici 
+        if (ticket.state === 'Todo') {
+            const todoContainer = document.getElementById('Todo');
+            if (todoContainer) {
+                // Créez un nouvel élément de ticket
+                const newTicketElement = createTicketElement(ticket);
+                
+                // Ajoutez le nouveau ticket au début de la liste
+                todoContainer.insertAdjacentHTML('afterbegin', newTicketElement);
+                
+            }
         }
     }
 
@@ -38,7 +131,7 @@ ticketSocket.on('newNormalTicket', (ticket) => {
 
 // Fonction pour créer l'élément HTML du ticket pour la passage apres socket usefull fil composed ticket 
 function createTicketElement(ticket) {
-    const projectMembers = JSON.parse(document?.getElementById('projectMembers').dataset.members);
+    const projectMembers = JSON.parse(document?.getElementById('projectMembers')?.dataset.members);
     assignee = projectMembers.find(member => member.id === ticket.assignee);
     return `
         <div data-ticketid="${ticket.id}" class="card mb-1">
@@ -77,9 +170,117 @@ function createMemberDropdownItems(ticket,projectMembers) {
 //update
 ticketSocket.on('updatedNormalTicket', (ticket) => {
     // Mettez à jour l'interface utilisateur ici
-    const ticketElement = document.querySelector(`[data-ticketid="${ticket.id}"]`);
-    ticketElement.parentElement.removeChild(ticketElement);
-    document.getElementById(ticket.state).appendChild(ticketElement);
+    if(!document?.getElementById('stats-data')){
+        const ticketElement = document.querySelector(`[data-ticketid="${ticket.id}"]`);
+        ticketElement.parentElement.removeChild(ticketElement);
+        document.getElementById(ticket.state).appendChild(ticketElement);
+    }
+    if(document?.getElementById('stats-data')){
+        const statsElement = document.getElementById('stats-data');
+        let todo = parseFloat(statsElement.dataset.todo);
+        let doing = parseFloat(statsElement.dataset.doing);
+        let done = parseFloat(statsElement.dataset.done);
+
+       // Calculez le nombre total de tickets actuel
+       const totalPercentage = todo + doing + done;
+       let totalTickets = 100 / totalPercentage;
+
+       // Ajoutez le nouveau ticket
+       totalTickets++;
+
+       // Recalculez les pourcentages
+       if (ticket.state === 'Todo') {
+           todo = ((todo * (totalTickets - 1) / 100) + 1) / totalTickets * 100;
+           doing = (doing * (totalTickets - 1) / 100) / totalTickets * 100;
+           done = (done * (totalTickets - 1) / 100) / totalTickets * 100;
+       } else if (ticket.state === 'Doing') {
+           todo = (todo * (totalTickets - 1) / 100) / totalTickets * 100;
+           doing = ((doing * (totalTickets - 1) / 100) + 1) / totalTickets * 100;
+           done = (done * (totalTickets - 1) / 100) / totalTickets * 100;
+       } else if (ticket.state === 'Done') {
+           todo = (todo * (totalTickets - 1) / 100) / totalTickets * 100;
+           doing = (doing * (totalTickets - 1) / 100) / totalTickets * 100;
+           done = ((done * (totalTickets - 1) / 100) + 1) / totalTickets * 100;
+       }
+
+       const stats = {
+           TODO: todo.toFixed(1),
+           DOING: doing.toFixed(1),
+           DONE: done.toFixed(1)
+       };
+
+       console.log('Stats:', stats);
+       
+        const data = {
+          labels: ['TODO', 'DOING', 'DONE'],
+          datasets: [{
+            label: 'Répartition des tickets (%)',
+            data: [stats.TODO, stats.DOING, stats.DONE],
+            backgroundColor: [
+              'rgba(220, 38, 38, 0.7)',   // TODO - $danger - #dc2626
+              'rgba(245, 158, 11, 0.7)',  // DOING - $warning - #f59e0b
+              'rgba(22, 163, 74, 0.7)'    // DONE - $success - #16a34a
+            ],
+            borderColor: [
+              'rgba(220, 38, 38, 0.7)',
+              'rgba(245, 158, 11, 0.7)',
+              'rgba(22, 163, 74, 0.7)'
+            ],
+            borderWidth: 1
+          }]
+        };
+      
+        const config = {
+          type: 'pie',
+          data: data,
+          options: {
+            plugins: {
+              tooltip: {
+                callbacks: {
+                  label: function(context) {
+                    return `${context.label}: ${context.raw}%`;
+                  }
+                }
+              }
+            }
+          }
+        };
+        // Utilisation
+        const newChartElement = recreateElement('myPieChart');
+        if (newChartElement) {
+            globalChart = new Chart(newChartElement, config);
+        }
+        statsElement.dataset.todo = stats.TODO;
+            statsElement.dataset.doing = stats.DOING;
+            statsElement.dataset.done = stats.DONE;
+            const h2Todo = document.getElementById('ticket-todo');
+            const h2Doing = document.getElementById('ticket-doing');
+            const h2Done = document.getElementById('ticket-done');
+            h2Todo.innerHTML = stats.TODO + '%';
+            h2Doing.innerHTML = stats.DOING + '%';
+            h2Done.innerHTML = stats.DONE + '%';
+        const newState = document?.getElementById(`ticket${ticket.id}`);
+        if(newState){
+            switch (ticket.state) {
+                case 'Todo':
+                    newState.classList.remove('badge', 'bg-warning');
+                    newState.classList.add('badge','bg-danger');
+                    break;
+                case 'Doing':
+                    newState.classList.remove('badge' ,'bg-danger');
+                    newState.classList.add('badge' ,'bg-warning');
+                    break;
+                case 'Done':
+                    newState.classList.remove('badge' ,'bg-warning');
+                    newState.classList.add('badge' ,'bg-success');
+                    break;
+                default:
+                    break;
+        }
+        newState.innerHTML = ticket.state;
+
+    }
+}
 });
 
 
@@ -150,7 +351,38 @@ ticketSocket.on('error', (error) => {
 });
 
 
-
+/**
+* DOM of adding new ligne of a normal ticket in the dashboard 
+*/
+function ajouterTicketViaSocket(ticket) {
+    const tbody = document.getElementById('ticketsTableBody');
+    const projectMembers = JSON.parse(document?.getElementById('projectMembers').dataset.members);
+    let assignee = projectMembers.find(member => member.id === ticket.assignee);
+    const newRow = `
+      <tr>
+        <th scope="row">${tbody.children.length + 1}</th>
+        <td>${ticket.title}</td>
+        <td>
+          <span id="ticket${ticket.id}" class="badge bg-${ticket.state === 'Todo' ? 'danger' : ticket.state === 'Doing' ? 'warning' : 'success'}">
+            ${ticket.state}
+          </span>
+        </td>
+        <td>
+          <img src="/img/members/${assignee.avatar}" 
+            class="img-fluid rounded-circle"
+            data-bs-toggle="tooltip" 
+            data-bs-placement="right"
+            data-bs-custom-class="custom-tooltip"
+            data-bs-title="${assignee.name}" 
+            width="40" 
+            height="40" />
+        </td>
+        <td>${new Date(ticket.createdAt).toLocaleDateString()}</td>
+        <td>${ticket.description}</td>
+      </tr>
+    `;
+    tbody.insertAdjacentHTML('beforeend', newRow);
+  }
 
 
 /**
@@ -340,6 +572,45 @@ function createSubTicketElement(subTicket) {
     </div>
 `;
 }
+
+/**
+* Recreation de chart DOM
+*/
+function recreateElement(elementId) {
+    const oldElement = document.getElementById(elementId);
+    if (oldElement) {
+        const parent = oldElement.parentNode;
+        const nextSibling = oldElement.nextSibling;
+
+        // Suppression de l'ancien élément
+        oldElement.remove();
+
+        // Création du nouvel élément
+        const newElement = document.createElement(oldElement.tagName);
+        newElement.id = elementId;
+
+        // Ajout des attributs width et height
+        newElement.setAttribute('width', '300');
+        newElement.setAttribute('height', '300');
+
+        // Ajout du style
+        newElement.style.maxWidth = '300px';
+        newElement.style.maxHeight = '300px';
+        newElement.style.marginLeft = '25%';
+
+        // Insertion du nouvel élément
+        if (nextSibling) {
+            parent.insertBefore(newElement, nextSibling);
+        } else {
+            parent.appendChild(newElement);
+        }
+
+        return newElement;
+    }
+    return null;
+}
+
+
 
 
 export { ticketSocket };

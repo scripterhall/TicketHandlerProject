@@ -1,12 +1,17 @@
 <div class="col-12 mt-3 d-flex">
     <div class="p-2 flex-fill">
         <!-- un bouton input pour chercher un membre dans le projet -->
+        <form>
         <div class="input-group mb-3">
+            
             <span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-magnifying-glass"></i></span>
-            <input type="text" class="form-control" placeholder="Find a Memberby name or email ..." aria-label="Username" aria-describedby="basic-addon1">
+            <input type="text" name="member" class="form-control" placeholder="Find a Memberby name or email ..." aria-label="Username" aria-describedby="basic-addon1">
              <!-- un bouton pour affihcer les pending invitation -->
-            <button  class="btn btn-outline-light border-info text-info me-3">search members</button>
+            <button type="submit" class="btn btn-outline-light border-info text-info me-3">search members</button>
+            <a href="/projects/<%= project.id%>/members?id=<%= project.id %>" class="btn btn-outline-light border-info text-info me-3">annuler filter</a>
+          
         </div>
+      </form>
     </div>
     <div class="pb-4 flex-fill d-flex justify-content-center">
        

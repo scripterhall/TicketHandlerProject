@@ -37,7 +37,7 @@ ProjectSchema.virtual('tickets', {
         where: { active: true }
     }
     ,
-    limit: 10 // Garde uniquement les 10 premiers tickets
+    limit: 30 // Garde uniquement les 10 premiers tickets
 });
 
 ProjectSchema.pre(/^find/,function(next){

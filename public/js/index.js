@@ -23,6 +23,9 @@ const changePasswordForm = document?.getElementById('changePasswordForm');
 const logoutButton = document?.getElementById('logout-button');
 const registerForm = document?.getElementById('registerForm');
 const curProjectForm = document?.getElementById('curProjectForm');
+//for name of assigne ticket in ticket table dashboard
+const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
 
 /**
 scrum board translations 

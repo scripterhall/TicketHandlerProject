@@ -4,6 +4,7 @@
      data-doing="<%= stats.DOING %>"
      data-done="<%= stats.DONE %>">
 </div>
+<div id="projectMembers" data-members="<%= JSON.stringify(oneProject.members) %>" style="display: none;"></div>
 <canvas id="myPieChart"  width="300" height="300" style="max-width: 300px;max-height:300px;margin-left:25%;"></canvas>
 <div class="d-flex justify-content-evenly mt-5">
   <i class="text-success fs-2 fa-duetone fa-solid fa-thumbs-up"></i>
@@ -12,13 +13,13 @@
 
 </div>
 <div class="d-flex justify-content-evenly mt-2">
-    <h2 class="ms-2">
+    <h2 id="ticket-done" class="ms-2">
         <%= stats.DONE %>%
     </h2>
-    <h2 class="ms-2">
+    <h2 id="ticket-doing" class="ms-2">
       <%= stats.DOING %>%
     </h2>
-    <h2 class="ms-2">
+    <h2 id="ticket-todo" class="ms-2">
       <%= stats.TODO %>%
     </h2>
 </div>

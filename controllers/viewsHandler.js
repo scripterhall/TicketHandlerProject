@@ -83,6 +83,11 @@ exports.getProjectMembers = catchAsync(async (req, res, next) => {
     const appMembers = await Member.find({ role:'member'});   
     //if(!members) return next(new AppError('No members found for this project', 404));
     //render members.ejs page with members
+    //filter oneProject members if there is query req.query.name ou req.query.email en meme temps
+  
+    if(req.query.member){
+        oneProject.members = oneProject.members.filter(m => m.name.toLowerCase().includes(req.query.member.toLowerCase()) || m.email.toLowerCase().includes(req.query.member.toLowerCase()));
+    }
     const invitations = await Invitation.find({ member: req.member.id,status:'pending' });
     res.status(200).render('members', { title: 'Members', projects,oneProject,members:oneProject.members, project: req.params.id,appMembers,invitations });
 });

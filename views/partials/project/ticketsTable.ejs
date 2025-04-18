@@ -10,7 +10,7 @@
           <th scope="col">Description</th>
         </tr>
       </thead>
-      <tbody>
+      <tbody id="ticketsTableBody">
         <% if (tickets.length === 0) { %>
           <tr>
             <td colspan="6" class="text-center py-4 text-muted">
@@ -24,11 +24,18 @@
               <th scope="row"><%= index+1 %></th>
               <td><%= ticket.title %></td>
               <td>
-                <span class="badge bg-<%= ticket.state === 'Todo' ? 'danger' : ticket.state === 'Doing' ? 'warning' : 'success' %>">
+                <span id="ticket<%= ticket.id %>" class="badge bg-<%= ticket.state === 'Todo' ? 'danger' : ticket.state === 'Doing' ? 'warning' : 'success' %>">
                   <%= ticket.state %>
                 </span>
               </td>
-              <td> <img src="/img/members/<%= ticket.assignee.avatar %>" class="img-fluid rounded-circle" width="40" height="40" />  </td>
+              <td> <img  src="/img/members/<%= ticket.assignee.avatar %>" 
+                class="img-fluid rounded-circle"
+                data-bs-toggle="tooltip" 
+                data-bs-placement="right"
+                data-bs-custom-class="custom-tooltip"
+                data-bs-title="<%= ticket.assignee.name %>" 
+                width="40" 
+                height="40" />  </td>
               <td><%= new Date(ticket.createdAt).toLocaleDateString() %></td>
               <td><%= ticket.description %></td>
             </tr>
